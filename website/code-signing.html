@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Code signing policy: Tessera</title>
+  <meta name="description" content="How Tessera's release builds are made and signed.">
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site"><div class="wrap"><a class="brand" href="/"><img src="assets/icon-256.png" alt="" width="30" height="30">Tessera</a></div></header>
+  <main class="wrap doc">
+    <p><a href="/">Back to the download page</a></p>
+    <h1>Code signing policy</h1>
+    <p>Last updated: 11 November 2026.</p>
+
+    <h2>Windows</h2>
+    <p>Windows installers of Tessera are signed through the <a href="https://signpath.org/foundation">SignPath Foundation</a>: free code signing provided by <a href="https://signpath.io">SignPath.io</a>, certificate by SignPath Foundation. The project has applied to the programme. Until it is approved, Windows installers are <strong>not signed</strong> and SmartScreen shows "unknown publisher".</p>
+    <ul>
+      <li>Only builds made from the public source code at <a href="https://github.com/MustafaManhal/Tessera">github.com/MustafaManhal/Tessera</a> are submitted for signing.</li>
+      <li>Builds are made by GitHub Actions from the <code>main</code> branch or a version tag. No build made on a personal computer is signed.</li>
+      <li>The signing request is made by the release workflow and can be traced to a commit. The maintainer approves each release before it is signed.</li>
+    </ul>
+
+    <h2>Team roles</h2>
+    <ul>
+      <li><strong>Author, reviewer and approver:</strong> Mustafa Manhal (<a href="https://github.com/MustafaManhal">@MustafaManhal</a>), the sole maintainer.</li>
+    </ul>
+
+    <h2>macOS</h2>
+    <p>macOS builds are signed ad hoc and are not notarized (notarization needs a paid Apple Developer membership). The first time you open the app, right-click it and choose Open.</p>
+
+    <h2>Update signatures</h2>
+    <p>Separately from operating system signing, every update the app installs is verified against a public key built into the app. The matching private key is held only by the maintainer.</p>
+
+    <h2>Privacy</h2>
+    <p>Signed programs do not transmit any information to the signing service beyond what is needed to sign the file. See the <a href="privacy">privacy policy</a>.</p>
+  </main>
+</body>
+</html>

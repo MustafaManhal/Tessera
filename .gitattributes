@@ -1,0 +1,5 @@
+# LF everywhere, so Biome and rustfmt checks pass on Windows checkouts (core.autocrlf would add CRLF).
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary

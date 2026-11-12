@@ -1,0 +1,5 @@
+# user comment
+model = "fixture-model" # keep inline comment
+
+[unknown]
+keep = true

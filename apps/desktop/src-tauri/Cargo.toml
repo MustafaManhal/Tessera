@@ -1,0 +1,54 @@
+[package]
+name = "tessera-desktop"
+description = "Tessera desktop app: windows, menus, plugins and IPC wiring (TRD 2.1)."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+# The `_lib` suffix keeps the lib name distinct from the bin name (needed on Windows,
+# see https://github.com/rust-lang/cargo/issues/8519).
+name = "tessera_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "1.2.1"
+specta = "=2.0.0-rc.26"
+specta-typescript = "0.0.13"
+tauri-specta = { version = "=2.0.0-rc.26", features = ["derive", "typescript"] }
+tracing = "0.1.44"
+tracing-appender = "0.2.5"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+tessera-store = { version = "0.1.0", path = "../../../crates/tessera-store" }
+tessera-forge = { version = "0.1.0", path = "../../../crates/tessera-forge" }
+tessera-pty = { version = "0.1.0", path = "../../../crates/tessera-pty" }
+tessera-git = { version = "0.1.0", path = "../../../crates/tessera-git" }
+tauri-plugin-notification = "2"
+tessera-shell = { version = "0.1.0", path = "../../../crates/tessera-shell" }
+tauri-plugin-dialog = "2"
+tauri-plugin-global-shortcut = "2.4.1"
+tessera-agents = { version = "0.1.0", path = "../../../crates/tessera-agents" }
+tessera-api = { version = "0.1.0", path = "../../../crates/tessera-api" }
+tesserad = { version = "0.1.0", path = "../../../crates/tesserad" }
+chrono = { version = "0.4.42", default-features = false, features = ["clock", "std"] }
+keyring = "4.2.0"
+regex = "1.13.1"
+tessera-sync = { version = "0.1.0", path = "../../../crates/tessera-sync" }
+tauri-plugin-updater = "2"
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+tauri-nspanel = "2.1.1"
