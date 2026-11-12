@@ -1,0 +1,525 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Config",
+  "description": "Effective user configuration. Missing settings use the documented defaults.",
+  "type": "object",
+  "properties": {
+    "api": {
+      "description": "Api settings.",
+      "$ref": "#/$defs/ApiConfig",
+      "default": {
+        "mcp-server": false,
+        "socket": true
+      }
+    },
+    "appearance": {
+      "description": "Appearance settings.",
+      "$ref": "#/$defs/AppearanceConfig",
+      "default": {
+        "background-blur": true,
+        "dim-unfocused": 0.0,
+        "padding": 6,
+        "theme": "system",
+        "theme-dark": "Tessera Night",
+        "theme-light": "GitHub Light",
+        "ui-zoom": 1.0,
+        "window-opacity": 1.0
+      }
+    },
+    "editor": {
+      "description": "Editor settings.",
+      "$ref": "#/$defs/EditorConfig",
+      "default": {
+        "command": "code"
+      }
+    },
+    "font": {
+      "description": "Font settings.",
+      "$ref": "#/$defs/FontConfig",
+      "default": {
+        "family": "JetBrains Mono",
+        "features": [
+          "calt",
+          "ss01"
+        ],
+        "ligatures": true,
+        "line-height": 1.2,
+        "size": 13.0
+      }
+    },
+    "keybindings": {
+      "description": "Keybindings settings.",
+      "$ref": "#/$defs/KeybindingsConfig",
+      "default": {
+        "palette.open": [
+          "Cmd+K",
+          "Cmd+Shift+P"
+        ],
+        "pane.splitRight": "Cmd+D"
+      }
+    },
+    "notifications": {
+      "description": "Notifications settings.",
+      "$ref": "#/$defs/NotificationsConfig",
+      "default": {
+        "agent-done": true,
+        "agent-needs-input": true,
+        "ci": true,
+        "dnd-until": 0
+      }
+    },
+    "quick-terminal": {
+      "description": "QuickTerminal settings.",
+      "$ref": "#/$defs/QuickTerminalConfig",
+      "default": {
+        "enabled": true,
+        "height": 0.4,
+        "hide-on-blur": true,
+        "hotkey": "Ctrl+`"
+      }
+    },
+    "shell": {
+      "description": "Shell settings.",
+      "$ref": "#/$defs/ShellConfig",
+      "default": {
+        "default": "auto"
+      }
+    },
+    "terminal": {
+      "description": "Terminal settings.",
+      "$ref": "#/$defs/TerminalConfig",
+      "default": {
+        "confirm-multiline-paste": true,
+        "copy-on-select": false,
+        "cursor-blink": true,
+        "cursor-style": "block",
+        "engine": "xterm",
+        "long-command-notify-seconds": 30,
+        "osc52": "ask",
+        "scrollback": 10000,
+        "shell-integration": true
+      }
+    },
+    "updates": {
+      "description": "Updates settings.",
+      "$ref": "#/$defs/UpdatesConfig",
+      "default": {
+        "channel": "stable"
+      }
+    },
+    "worktrees": {
+      "description": "Worktrees settings.",
+      "$ref": "#/$defs/WorktreesConfig",
+      "default": {
+        "branch-prefix": "tessera/",
+        "dir": "auto"
+      }
+    }
+  },
+  "$defs": {
+    "ApiConfig": {
+      "description": "The [api] section.",
+      "type": "object",
+      "properties": {
+        "mcp-server": {
+          "description": "Enable the MCP server.",
+          "type": "boolean",
+          "default": false
+        },
+        "socket": {
+          "description": "Enable the local API socket.",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "AppearanceConfig": {
+      "description": "The [appearance] section.",
+      "type": "object",
+      "properties": {
+        "background-blur": {
+          "description": "Enable macOS vibrancy or Windows Mica.",
+          "type": "boolean",
+          "default": true
+        },
+        "dim-unfocused": {
+          "description": "How much panes without focus are dimmed, from 0.0 (not at all) to 0.6.",
+          "type": "number",
+          "format": "double",
+          "default": 0.0,
+          "maximum": 0.6,
+          "minimum": 0.0
+        },
+        "padding": {
+          "description": "Space between a terminal's text and its pane edge, in pixels (0 to 32).",
+          "type": "integer",
+          "format": "uint32",
+          "default": 6,
+          "maximum": 32,
+          "minimum": 0
+        },
+        "theme": {
+          "description": "Legacy system, light or dark preference; retained for compatibility.",
+          "$ref": "#/$defs/Theme",
+          "default": "system"
+        },
+        "theme-dark": {
+          "description": "Dark colour theme.",
+          "type": "string",
+          "default": "Tessera Night"
+        },
+        "theme-light": {
+          "description": "Light colour theme.",
+          "type": "string",
+          "default": "GitHub Light"
+        },
+        "ui-zoom": {
+          "description": "Interface scale, from 0.5 to 3.0.",
+          "type": "number",
+          "format": "double",
+          "default": 1.0,
+          "maximum": 3,
+          "minimum": 0.5
+        },
+        "window-opacity": {
+          "description": "Window opacity, from 0.0 to 1.0.",
+          "type": "number",
+          "format": "double",
+          "default": 1.0,
+          "maximum": 1,
+          "minimum": 0
+        }
+      }
+    },
+    "CursorStyle": {
+      "description": "Values for CursorStyle.",
+      "oneOf": [
+        {
+          "description": "Block.",
+          "type": "string",
+          "const": "block"
+        },
+        {
+          "description": "Bar.",
+          "type": "string",
+          "const": "bar"
+        },
+        {
+          "description": "Underline.",
+          "type": "string",
+          "const": "underline"
+        }
+      ]
+    },
+    "EditorConfig": {
+      "description": "The [editor] section.",
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "Editor command, optionally with path and line placeholders.",
+          "type": "string",
+          "default": "code"
+        }
+      }
+    },
+    "FontConfig": {
+      "description": "The [font] section.",
+      "type": "object",
+      "properties": {
+        "family": {
+          "description": "Terminal font family.",
+          "type": "string",
+          "default": "JetBrains Mono"
+        },
+        "features": {
+          "description": "OpenType feature tags.",
+          "type": "array",
+          "default": [
+            "calt",
+            "ss01"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "ligatures": {
+          "description": "Enable font ligatures.",
+          "type": "boolean",
+          "default": true
+        },
+        "line-height": {
+          "description": "Line height multiplier, from 0.5 to 3.0.",
+          "type": "number",
+          "format": "double",
+          "default": 1.2,
+          "maximum": 3,
+          "minimum": 0.5
+        },
+        "size": {
+          "description": "Font size in logical pixels, from 6 to 72.",
+          "type": "number",
+          "format": "double",
+          "default": 13.0,
+          "maximum": 72,
+          "minimum": 6
+        }
+      }
+    },
+    "Keybinding": {
+      "description": "One shortcut or several alternative shortcuts.",
+      "anyOf": [
+        {
+          "description": "A single chord.",
+          "type": "string"
+        },
+        {
+          "description": "Alternative chords.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "KeybindingsConfig": {
+      "description": "The [keybindings] section.",
+      "type": "object",
+      "properties": {
+        "palette.open": {
+          "description": "Shortcuts for palette.open.",
+          "$ref": "#/$defs/Keybinding",
+          "default": [
+            "Cmd+K",
+            "Cmd+Shift+P"
+          ]
+        },
+        "pane.splitRight": {
+          "description": "Shortcut for pane.splitRight.",
+          "$ref": "#/$defs/Keybinding",
+          "default": "Cmd+D"
+        }
+      }
+    },
+    "NotificationsConfig": {
+      "description": "The [notifications] section.",
+      "type": "object",
+      "properties": {
+        "agent-done": {
+          "description": "Notify when an agent finishes.",
+          "type": "boolean",
+          "default": true
+        },
+        "agent-needs-input": {
+          "description": "Notify when an agent needs input.",
+          "type": "boolean",
+          "default": true
+        },
+        "ci": {
+          "description": "Notify about CI results.",
+          "type": "boolean",
+          "default": true
+        },
+        "dnd-until": {
+          "description": "Unix timestamp until which notifications are muted; zero disables DND.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 0,
+          "minimum": 0
+        }
+      }
+    },
+    "Osc52": {
+      "description": "Values for Osc52.",
+      "oneOf": [
+        {
+          "description": "Off.",
+          "type": "string",
+          "const": "off"
+        },
+        {
+          "description": "Ask.",
+          "type": "string",
+          "const": "ask"
+        },
+        {
+          "description": "Allow.",
+          "type": "string",
+          "const": "allow"
+        }
+      ]
+    },
+    "QuickTerminalConfig": {
+      "description": "The [quick-terminal] section.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enable the quick terminal.",
+          "type": "boolean",
+          "default": true
+        },
+        "height": {
+          "description": "Fraction of screen height, greater than 0 and at most 1.",
+          "type": "number",
+          "format": "double",
+          "default": 0.4,
+          "maximum": 1,
+          "minimum": 0
+        },
+        "hide-on-blur": {
+          "description": "Hide when focus leaves the quick terminal.",
+          "type": "boolean",
+          "default": true
+        },
+        "hotkey": {
+          "description": "Global quick terminal hotkey.",
+          "type": "string",
+          "default": "Ctrl+`"
+        }
+      }
+    },
+    "ShellConfig": {
+      "description": "The [shell] section.",
+      "type": "object",
+      "properties": {
+        "default": {
+          "description": "Default shell: auto, a path, a command or a WSL distro.",
+          "type": "string",
+          "default": "auto"
+        }
+      }
+    },
+    "TerminalConfig": {
+      "description": "The [terminal] section.",
+      "type": "object",
+      "properties": {
+        "confirm-multiline-paste": {
+          "description": "Confirm before pasting multiple lines.",
+          "type": "boolean",
+          "default": true
+        },
+        "copy-on-select": {
+          "description": "Copy selected text automatically.",
+          "type": "boolean",
+          "default": false
+        },
+        "cursor-blink": {
+          "description": "Blink the terminal cursor.",
+          "type": "boolean",
+          "default": true
+        },
+        "cursor-style": {
+          "description": "Terminal cursor shape.",
+          "$ref": "#/$defs/CursorStyle",
+          "default": "block"
+        },
+        "engine": {
+          "description": "Terminal rendering engine.",
+          "$ref": "#/$defs/TerminalEngine",
+          "default": "xterm"
+        },
+        "long-command-notify-seconds": {
+          "description": "Notify when commands exceed this duration in seconds.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 30,
+          "minimum": 0
+        },
+        "osc52": {
+          "description": "OSC 52 clipboard write permission.",
+          "$ref": "#/$defs/Osc52",
+          "default": "ask"
+        },
+        "scrollback": {
+          "description": "Scrollback ring size, from 0 to 1000000 lines.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 10000,
+          "maximum": 1000000,
+          "minimum": 0
+        },
+        "shell-integration": {
+          "description": "Inject shell integration for prompts and working directories.",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "TerminalEngine": {
+      "description": "Values for TerminalEngine.",
+      "oneOf": [
+        {
+          "description": "Xterm.",
+          "type": "string",
+          "const": "xterm"
+        },
+        {
+          "description": "Ghostty.",
+          "type": "string",
+          "const": "ghostty"
+        }
+      ]
+    },
+    "Theme": {
+      "description": "Values for Theme.",
+      "oneOf": [
+        {
+          "description": "System.",
+          "type": "string",
+          "const": "system"
+        },
+        {
+          "description": "Light.",
+          "type": "string",
+          "const": "light"
+        },
+        {
+          "description": "Dark.",
+          "type": "string",
+          "const": "dark"
+        }
+      ]
+    },
+    "UpdateChannel": {
+      "description": "Values for UpdateChannel.",
+      "oneOf": [
+        {
+          "description": "Stable.",
+          "type": "string",
+          "const": "stable"
+        },
+        {
+          "description": "Beta.",
+          "type": "string",
+          "const": "beta"
+        }
+      ]
+    },
+    "UpdatesConfig": {
+      "description": "The [updates] section.",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "description": "Update channel.",
+          "$ref": "#/$defs/UpdateChannel",
+          "default": "stable"
+        }
+      }
+    },
+    "WorktreesConfig": {
+      "description": "The [worktrees] section.",
+      "type": "object",
+      "properties": {
+        "branch-prefix": {
+          "description": "Prefix for task branches.",
+          "type": "string",
+          "default": "tessera/"
+        },
+        "dir": {
+          "description": "Worktree folder, or auto for the sibling tessera-worktrees folder.",
+          "type": "string",
+          "default": "auto"
+        }
+      }
+    }
+  }
+}
