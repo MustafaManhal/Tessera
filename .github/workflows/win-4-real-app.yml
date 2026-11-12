@@ -1,0 +1,73 @@
+name: "Windows 4: real app"
+
+# Manual, one workflow per Windows check. Start them one at a time (Actions, pick the workflow, Run workflow).
+# Proves on Windows: M1.1 and M1.2 (real ConPTY pane: prompt, echo, resize, exit overlay, close), M1.5 (taskbar progress and focus commands, no secure keyboard), M3.3 (About with real app info), screenshots of the real window.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-app:
+    name: Real app on Windows (build, start, smoke)
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Configure WebView2 DevTools for the real-app smoke
+        run: node apps/desktop/tests/windows/prepare-cdp-config.mjs
+
+      - name: Build the debug app
+        shell: pwsh
+        run: |
+          # `--no-bundle` made Tauri pass a stray "-" to cargo (first public run), so always build the NSIS installer.
+          $bundles = if ($env:GITHUB_REF_TYPE -eq "tag") { "nsis,msi" } else { "nsis" }
+          pnpm --filter @tessera/desktop tauri build --debug --config "$env:GITHUB_WORKSPACE/artifacts/windows/tauri.cdp.conf.json" --bundles "$bundles"
+
+      - name: Build the session daemon next to the app
+        run: cargo build -p tesserad
+
+      - name: Run real-window Playwright CDP smoke test
+        env:
+          TESSERA_SESSION_DAEMON: "1"
+          TESSERA_APP_PATH: target/debug/tessera-desktop.exe
+        run: node apps/desktop/tests/windows/smoke.mjs
+
+      - name: Capture desktop fallback screenshot
+        if: always()
+        continue-on-error: true
+        shell: pwsh
+        run: pwsh -NoProfile -File scripts/windows/capture-desktop.ps1 -Path artifacts/windows/desktop-fallback.png
+
+      - name: Collect app logs
+        if: always()
+        shell: pwsh
+        run: |
+          $source = Join-Path $env:APPDATA "Tessera Dev"
+          $destination = "artifacts/windows/app-data"
+          if (Test-Path $source) {
+            New-Item -ItemType Directory -Force $destination | Out-Null
+            Get-ChildItem $source -File -Recurse -ErrorAction SilentlyContinue |
+              Where-Object { $_.Extension -in @(".log", ".jsonl", ".txt") } |
+              Copy-Item -Destination $destination -Force
+          }
+
+      - name: Upload Windows verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-verification-${{ github.run_id }}
+          path: |
+            target/debug/tessera-desktop.exe
+            target/debug/bundle/nsis/*.exe
+            target/debug/bundle/msi/*.msi
+            artifacts/windows/**
+            playwright-report/**
+            apps/desktop/playwright-report/**
+            test-results/**
+            apps/desktop/test-results/**
+          if-no-files-found: warn
+          retention-days: 14

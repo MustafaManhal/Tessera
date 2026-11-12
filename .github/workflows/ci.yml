@@ -1,0 +1,85 @@
+# Runs the same gates as `pnpm check` (see README "Checks"), the Playwright UI tests and a debug build.
+# Tessera ships for macOS and Windows only. macOS minutes cost 10x on private repos, so macOS is checked on the
+# developer machine before every push (pnpm check) and built here only on demand and on release tags. Windows runs on
+# every push. Ubuntu appears only for the browser UI tests (cheap, no native shell needed); there is no Linux product.
+name: CI
+
+on:
+  # Windows minutes are billed at 2x and the monthly allowance ran out: `pnpm check` is the per-push gate (local).
+  # CI runs for main, release tags, pull requests into main and manual dispatch only.
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  check:
+    name: check (${{ matrix.os }})
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm check
+
+  ui:
+    name: ui (playwright)
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    # No apt: the runner's package mirrors failed to resolve on 2026-11-11 (both 24.04 and 26.04), and the image
+    # already has every library Chromium needs. `--with-deps` only added extra fonts and hung on apt for minutes.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          rust: "false"
+      - name: Install Chromium (no system packages)
+        timeout-minutes: 5
+        run: pnpm exec playwright install chromium
+      - run: pnpm test:ui
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  build:
+    name: build (${{ matrix.os }})
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm --filter @tessera/desktop tauri build --debug --no-bundle
+
+  build-macos:
+    name: build (macos-latest)
+    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm --filter @tessera/desktop tauri build --debug --no-bundle
