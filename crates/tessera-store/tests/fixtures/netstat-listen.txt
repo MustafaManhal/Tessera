@@ -1,0 +1,11 @@
+Active Connections
+  Proto Local Address Foreign Address State PID
+  TCP 127.0.0.1:1421 0.0.0.0:0 LISTENING 41
+  TCP [::1]:9000 [::]:0 LISTENING 41
+  TCP 0.0.0.0:1421 0.0.0.0:0 LISTENING 41
+  TCP 0.0.0.0:3000 0.0.0.0:0 LISTENING 42
+  TCP 127.0.0.1:4000 127.0.0.1:80 ESTABLISHED 41
+  UDP 0.0.0.0:5000 *:* 41
+  TCP [::]:65536 [::]:0 LISTENING 41
+  TCP malformed endpoint LISTENING not-a-pid
+garbage

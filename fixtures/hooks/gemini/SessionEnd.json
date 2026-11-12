@@ -1,0 +1,8 @@
+{
+  "session_id": "fixture-session",
+  "cwd": "/fixture/project",
+  "hook_event_name": "SessionEnd",
+  "transcript_path": "/fixture/transcript.json",
+  "timestamp": "2026-11-11T00:00:00Z",
+  "reason": "exit"
+}

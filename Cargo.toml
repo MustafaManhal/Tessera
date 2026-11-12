@@ -1,0 +1,27 @@
+[workspace]
+resolver = "3"
+members = ["apps/desktop/src-tauri", "crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+rust-version = "1.90"
+
+# Clippy lints for the workspace. `all = "warn"` keeps the warnings visible, and
+# the `rust:clippy` check command adds `-- -D warnings` so any warning fails the gate.
+[workspace.lints]
+clippy = { all = "warn" }
+
+# Size and speed settings for release builds: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
+
+# Dependencies are built for size (they are not the hot path); our own crates stay at opt-level 3. This keeps the
+# macOS universal installer under the 25 MB limit (NFR-05): it carries both architectures.
+[profile.release.package."*"]
+opt-level = "s"

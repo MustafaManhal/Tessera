@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tessera: a fast terminal for coding agents</title>
+  <meta name="description" content="Tessera is a fast, open-source terminal for macOS and Windows that runs several coding agents side by side, with command blocks, tabs, splits and git worktree tasks.">
+  <meta property="og:title" content="Tessera">
+  <meta property="og:description" content="A fast, open-source terminal for macOS and Windows that runs several coding agents side by side.">
+  <meta property="og:image" content="assets/icon-256.png">
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="assets/icon-256.png" alt="" width="30" height="30">Tessera</a>
+      <nav class="links" aria-label="Main">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/MustafaManhal/Tessera">Source</a>
+        <a href="https://github.com/MustafaManhal/Tessera/releases">All releases</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap" aria-labelledby="title">
+      <img class="icon" src="assets/icon-256.png" alt="Tessera app icon" width="112" height="112">
+      <h1 id="title">One terminal for <span class="grad">every coding agent</span></h1>
+      <p class="lede">Tessera is a fast, open-source terminal for macOS and Windows. Run Claude Code, Codex, Gemini CLI and more side by side, each in its own git worktree.</p>
+      <p class="say">
+        <span>Say it: <code>TESS-er-uh</code> (a small tile of a mosaic)</span>
+        <button class="ghost" id="say" type="button" aria-label="Hear how to say Tessera">Listen</button>
+      </p>
+
+      <div class="download" id="download" aria-live="polite">
+        <div class="dl-grid" id="dl-grid">
+          <a class="btn primary" id="dl-main" href="https://github.com/MustafaManhal/Tessera/releases" aria-disabled="false">
+            <span class="t">Download Tessera</span>
+            <span class="s" id="dl-main-sub">Checking the latest release…</span>
+          </a>
+        </div>
+        <p class="meta" id="dl-meta"></p>
+      </div>
+    </section>
+
+    <section class="wrap" id="features" aria-labelledby="f-title">
+      <h2 id="f-title">Built for the way you work now</h2>
+      <p class="meta" style="margin-top:-.6rem">Early development: the terminal, blocks, tabs, splits, themes and worktree tasks work today. Built-in agent launching is the next milestone.</p>
+      <div class="features">
+        <article class="card"><h3>Command blocks</h3><p>Every command becomes a block with its exit status and duration. Jump between prompts, copy a block's output, re-run it, or fold it away.</p></article>
+        <article class="card"><h3>Tasks in git worktrees</h3><p>Start a task and Tessera makes a worktree and branch for it. Run several agents on one repo without them stepping on each other.</p></article>
+        <article class="card"><h3>Tabs, splits and restore</h3><p>Tabs, splits, broadcast input and multiple windows. Quit and come back to your layout, directories and scrollback.</p></article>
+        <article class="card"><h3>Fast and native</h3><p>A Rust core and a GPU-drawn terminal. Output keeps up with a 100 MiB flood, and the terminal host answers keystrokes in well under a millisecond.</p></article>
+        <article class="card"><h3>Your shell, your editor</h3><p>zsh, bash, fish, PowerShell and WSL. Open a task in VS Code, Cursor, Zed or JetBrains, and run project scripts in named panes.</p></article>
+        <article class="card"><h3>Private by default</h3><p>No telemetry, no account. Settings live in a plain <code>config.toml</code>. <a href="privacy">Read the privacy policy</a>.</p></article>
+      </div>
+    </section>
+
+    <section class="wrap" id="install" aria-labelledby="i-title">
+      <h2 id="i-title">Install notes</h2>
+      <div class="notes">
+        <div class="card">
+          <h3>macOS</h3>
+          <p>Open the <code>.dmg</code> and drag Tessera to Applications. The app is not notarized yet, so the first time, right-click it and choose <strong>Open</strong>. If macOS still refuses, run:</p>
+          <pre><code>xattr -dr com.apple.quarantine /Applications/Tessera.app</code></pre>
+        </div>
+        <div class="card">
+          <h3>Windows</h3>
+          <p>Run the <code>-setup.exe</code> installer. Until the project's code signing is approved, Windows SmartScreen shows "unknown publisher": choose <strong>More info</strong>, then <strong>Run anyway</strong>. See the <a href="code-signing">code signing policy</a>.</p>
+        </div>
+        <div class="card">
+          <h3>Updates</h3>
+          <p>Tessera checks for new versions and verifies every update with a signature before installing it. This page always links the newest release.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <nav aria-label="Footer">
+        <a href="https://github.com/MustafaManhal/Tessera">GitHub</a>
+        <a href="https://github.com/MustafaManhal/Tessera/blob/main/LICENSE">MIT license</a>
+        <a href="privacy">Privacy</a>
+        <a href="code-signing">Code signing policy</a>
+      </nav>
+      <p>Tessera is free and open source. Windows installers are signed with a free certificate from the SignPath Foundation once the project is approved (<a href="code-signing">details</a>).</p>
+    </div>
+  </footer>
+  <audio id="say-audio" src="assets/tessera.mp3" preload="none"></audio>
+  <script src="app.js" defer></script>
+</body>
+</html>

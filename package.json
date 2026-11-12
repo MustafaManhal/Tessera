@@ -1,0 +1,44 @@
+{
+  "name": "tessera",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Tessera: a fast terminal for macOS and Windows that runs coding agents in parallel.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "bench:throughput": "node scripts/bench/throughput.mjs",
+    "bench:latency": "node scripts/bench/latency.mjs",
+    "bench:cold-start": "node scripts/bench/cold-start.mjs",
+    "release:dry-run": "node scripts/release-dry-run.mjs",
+    "bench:memory": "node scripts/bench/memory.mjs",
+    "bench:scale": "node scripts/bench/scale.mjs",
+    "tauri": "pnpm --filter @tessera/desktop tauri",
+    "build": "pnpm --filter @tessera/desktop tauri build",
+    "check": "node scripts/check.mjs",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "vitest run",
+    "test:ui": "playwright test -c apps/desktop/playwright.config.ts",
+    "test:real-shell": "node apps/desktop/tests/real-shell/run.mjs",
+    "rust:fmt": "cargo fmt --all --check",
+    "rust:clippy": "cargo clippy --workspace --all-targets -- -D warnings",
+    "rust:release": "cargo clippy -p tessera-desktop --release -- -D warnings",
+    "rust:test": "node scripts/rust-test.mjs",
+    "check:cross": "node scripts/check-cross.mjs",
+    "check:linux": "node scripts/check-linux.mjs",
+    "package": "node scripts/package.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.6",
+    "@playwright/test": "1.65.0",
+    "@types/node": "26.6.6",
+    "vitest": "5.1.0"
+  }
+}

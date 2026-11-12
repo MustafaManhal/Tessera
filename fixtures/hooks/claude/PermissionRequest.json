@@ -1,0 +1,11 @@
+{
+  "session_id": "fixture-session",
+  "cwd": "/fixture/project",
+  "hook_event_name": "PermissionRequest",
+  "transcript_path": "/fixture/transcript.jsonl",
+  "permission_mode": "default",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "pwd"
+  }
+}
