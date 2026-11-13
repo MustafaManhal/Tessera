@@ -1,0 +1,15 @@
+Emoji ZWJ: 👩‍💻 👨‍👩‍👧‍👦 🏳️‍🌈
+Flags: 🇮🇶 🇯🇵 🇺🇸
+Skin tones: 👍🏻 👍🏽 👍🏿 👩🏽‍💻
+CJK wide: 中文 日本語 한국어 漢字
+Combining marks (decomposed): é ä ñ ô
+Box drawing: ┌────┬────┐ │界面│text│ └────┴────┘
+Nerd Font private-use icons:    
+Right-to-left: العربية مرحبا بالعالم | עברית שלום עולם
+Tabs:	A	界	end
+Wide table:
+┌──────────┬──────────┐
+│ Latin    │ CJK      │
+│ hello    │ 中文     │
+│ world    │ 日本語   │
+└──────────┴──────────┘

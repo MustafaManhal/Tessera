@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- macOS asks for these permissions on behalf of the app a program runs in. A program in a Tessera terminal is
+	     "Tessera" to macOS, so each permission needs a sentence here; without it macOS refuses without asking. -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Programs running in a Tessera terminal, such as an agent's voice input, can use the microphone when you ask them to.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Programs running in a Tessera terminal can use the camera when you ask them to.</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Programs running in a Tessera terminal can control other apps, for example with osascript, when you ask them to.</string>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files in your Desktop folder when you ask them to.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files in your Documents folder when you ask them to.</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files in your Downloads folder when you ask them to.</string>
+	<key>NSRemovableVolumesUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files on external drives when you ask them to.</string>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files on network drives when you ask them to.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Programs running in a Tessera terminal can use Bluetooth when you ask them to.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Programs running in a Tessera terminal, such as a dev server or an agent, can reach devices on your local network.</string>
+</dict>
+</plist>
