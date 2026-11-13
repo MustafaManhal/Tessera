@@ -1,0 +1,51 @@
+{
+  "name": "@tessera/desktop",
+  "private": true,
+  "version": "0.1.10",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm typecheck && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json"
+  },
+  "dependencies": {
+    "@codemirror/lang-css": "6.3.1",
+    "@codemirror/lang-html": "6.4.12",
+    "@codemirror/lang-javascript": "6.2.5",
+    "@codemirror/lang-json": "6.0.2",
+    "@codemirror/lang-markdown": "6.5.2",
+    "@codemirror/lang-python": "6.2.1",
+    "@codemirror/lang-rust": "6.0.2",
+    "@codemirror/lang-sql": "6.10.0",
+    "@codemirror/language": "6.13.1",
+    "@codemirror/merge": "6.12.3",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.15",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@reduxjs/toolkit": "2.14.0",
+    "@tailwindcss/vite": "4.3.5",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.8.4",
+    "@tauri-apps/plugin-notification": "^2.8.0",
+    "@tauri-apps/plugin-opener": "^2",
+    "@tessera/ipc": "workspace:*",
+    "@tessera/term": "workspace:*",
+    "@tessera/ui": "workspace:*",
+    "cmdk": "1.1.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-redux": "9.3.1",
+    "tailwindcss": "4.3.5"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16"
+  },
+  "description": "Tessera desktop app (Tauri 2 + React)."
+}

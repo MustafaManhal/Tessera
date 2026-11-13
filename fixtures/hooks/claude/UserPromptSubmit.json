@@ -1,0 +1,8 @@
+{
+  "session_id": "fixture-session",
+  "cwd": "/fixture/project",
+  "hook_event_name": "UserPromptSubmit",
+  "transcript_path": "/fixture/transcript.jsonl",
+  "permission_mode": "default",
+  "prompt": "Explain the fixture."
+}
