@@ -1,0 +1,26 @@
+# Dependencies and builds
+node_modules/
+dist/
+dist-ssr/
+target/
+apps/desktop/src-tauri/gen/schemas/
+
+# Logs and local files
+logs/
+*.log
+*.local
+.env
+.env.*
+!.env.example
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.swp
+
+# Test output
+playwright-report/
+test-results/
+coverage/

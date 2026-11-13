@@ -1,0 +1,17 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "gemini"
+name = "Gemini CLI"
+binaries = ["gemini"]
+version-cmd = ["gemini", "--version"]
+prompt-mode = "flag:--prompt-interactive"
+resume = ["gemini", "--resume", "{external_session_id}"]
+yolo-flags = ["--approval-mode=yolo"]
+hooks = "gemini-settings"
+install-url = "https://geminicli.com/docs/get-started/installation/"
+docs-url = "https://geminicli.com/docs/cli/cli-reference/"
+icon = "gem"
+model-flag = "--model"
+[usage]
+source = "none"
+[status-patterns]
+working = ["esc to cancel"]

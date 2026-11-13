@@ -1,0 +1,18 @@
+[package]
+name = "tessera-git"
+description = "git CLI wrapper: worktrees, status, diff, watcher (TRD 4.5)."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+notify = "8.2.2"
+thiserror = "2.0.21"
+tracing = "0.1.44"
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+tempfile = "3.27.0"

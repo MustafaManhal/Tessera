@@ -1,0 +1,15 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "cursor-agent"
+name = "Cursor Agent"
+binaries = ["cursor-agent", "agent"]
+version-cmd = ["cursor-agent", "--version"]
+prompt-mode = "arg"
+resume = ["cursor-agent", "--resume", "{external_session_id}"]
+yolo-flags = ["--force"]
+hooks = "none"
+install-url = "https://cursor.com/docs/cli/installation"
+docs-url = "https://cursor.com/docs/cli/reference/parameters"
+icon = "mouse-pointer"
+model-flag = "--model"
+[usage]
+source = "none"
