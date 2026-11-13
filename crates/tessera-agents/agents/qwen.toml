@@ -1,0 +1,15 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "qwen"
+name = "Qwen Code"
+binaries = ["qwen"]
+version-cmd = ["qwen", "--version"]
+prompt-mode = "flag:--prompt-interactive"
+resume = ["qwen", "--resume", "{external_session_id}"]
+yolo-flags = ["--yolo"]
+hooks = "none"
+install-url = "https://qwenlm.github.io/qwen-code-docs/en/users/quickstart/"
+docs-url = "https://qwenlm.github.io/qwen-code-docs/en/users/configuration/settings/"
+icon = "bot"
+model-flag = "--model"
+[usage]
+source = "none"

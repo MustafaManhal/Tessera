@@ -1,0 +1,17 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "claude"
+name = "Claude Code"
+binaries = ["claude"]
+version-cmd = ["claude", "--version"]
+prompt-mode = "arg"
+resume = ["claude", "--resume", "{external_session_id}"]
+yolo-flags = ["--dangerously-skip-permissions"]
+hooks = "claude-settings"
+install-url = "https://code.claude.com/docs/en/setup"
+docs-url = "https://code.claude.com/docs/en/cli-reference"
+icon = "sparkles"
+model-flag = "--model"
+[usage]
+source = "claude-jsonl"
+[status-patterns]
+working = ["esc to interrupt"]

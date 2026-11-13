@@ -1,0 +1,15 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "droid"
+name = "Factory Droid"
+binaries = ["droid"]
+version-cmd = ["droid", "--version"]
+prompt-mode = "arg"
+resume = ["droid", "--resume", "{external_session_id}"]
+yolo-flags = []
+hooks = "none"
+install-url = "https://docs.factory.com/droid-cli/cli-reference"
+docs-url = "https://docs.factory.com/droid-cli/cli-reference"
+icon = "bot"
+model-flag = "--model"
+[usage]
+source = "none"

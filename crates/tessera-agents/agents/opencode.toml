@@ -1,0 +1,14 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "opencode"
+name = "OpenCode"
+binaries = ["opencode"]
+version-cmd = ["opencode", "--version"]
+prompt-mode = "flag:--prompt"
+resume = ["opencode", "--session", "{external_session_id}"]
+yolo-flags = ["--auto"]
+hooks = "none"
+install-url = "https://opencode.ai/docs/"
+docs-url = "https://opencode.ai/docs/cli/"
+icon = "code"
+[usage]
+source = "none"

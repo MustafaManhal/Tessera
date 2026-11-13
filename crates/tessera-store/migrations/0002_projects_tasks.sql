@@ -1,0 +1,7 @@
+CREATE TABLE projects (id TEXT PRIMARY KEY, name TEXT NOT NULL, path TEXT NOT NULL UNIQUE, remote_url TEXT, default_branch TEXT NOT NULL, worktree_dir TEXT, setup_script TEXT, setup_shell TEXT, setup_approved_hash TEXT, copy_files TEXT, port_base INTEGER, default_profile_id TEXT, is_muted INTEGER DEFAULT 0, sort INTEGER, ssh_host_id TEXT, created_at INTEGER, updated_at INTEGER);
+CREATE TABLE run_scripts (id TEXT PRIMARY KEY, project_id TEXT REFERENCES projects(id) ON DELETE CASCADE, name TEXT, command TEXT, auto_start INTEGER, sort INTEGER);
+CREATE TABLE task_groups (id TEXT PRIMARY KEY, project_id TEXT REFERENCES projects(id), name TEXT, prompt TEXT, picked_task_id TEXT, created_at INTEGER);
+CREATE TABLE tasks (id TEXT PRIMARY KEY, project_id TEXT REFERENCES projects(id), group_id TEXT REFERENCES task_groups(id), name TEXT NOT NULL, slug TEXT NOT NULL, branch TEXT NOT NULL, base_branch TEXT NOT NULL, worktree_path TEXT, uses_main_checkout INTEGER DEFAULT 0, state TEXT CHECK(state IN ('backlog','setting_up','active','archived','deleted','error')), board_column TEXT, prompt TEXT, issue_ref TEXT, port_start INTEGER, port_count INTEGER DEFAULT 10, pr_number INTEGER, pr_url TEXT, pr_state TEXT, ci_state TEXT, last_message TEXT, tags TEXT, created_at INTEGER, updated_at INTEGER, archived_at INTEGER, UNIQUE(project_id, slug));
+CREATE INDEX run_scripts_project ON run_scripts(project_id);
+CREATE INDEX task_groups_project ON task_groups(project_id);
+CREATE INDEX tasks_project_state ON tasks(project_id, state);
