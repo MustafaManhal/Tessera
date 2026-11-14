@@ -1,0 +1,17 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "codex"
+name = "OpenAI Codex"
+binaries = ["codex"]
+version-cmd = ["codex", "--version"]
+prompt-mode = "arg"
+resume = ["codex", "resume", "{external_session_id}"]
+yolo-flags = ["--dangerously-bypass-approvals-and-sandbox"]
+hooks = "codex-config"
+install-url = "https://developers.openai.com/codex/cli"
+docs-url = "https://learn.chatgpt.com/docs/cli/reference"
+icon = "terminal"
+model-flag = "--model"
+[usage]
+source = "codex-log"
+[status-patterns]
+working = ["esc to interrupt"]
