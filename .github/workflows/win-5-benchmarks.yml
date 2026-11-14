@@ -1,0 +1,68 @@
+name: "Windows 5: benchmarks"
+
+# Manual, one workflow per Windows check. Start them one at a time (Actions, pick the workflow, Run workflow).
+# Proves on Windows: M1.6 and M12.5 (host latency, throughput, cold start, memory, 50-pane scale) on the release build. Numbers go to the run summary and an artifact; gates are per platform (D-15).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bench:
+    name: Benchmarks on Windows
+    runs-on: windows-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Build the release app (cold start, memory and scale are measured on the shipped build)
+        timeout-minutes: 30
+        shell: pwsh
+        run: pnpm --filter @tessera/desktop tauri build --no-bundle
+      - name: Build the benchmark binaries once
+        timeout-minutes: 15
+        run: cargo build --release -p tessera-pty --examples --tests
+      - name: Host latency
+        timeout-minutes: 8
+        env:
+          TESSERA_BENCH_BINARY: target/release/tessera-desktop.exe
+        run: pnpm bench:latency
+      - name: Throughput (100 MiB)
+        timeout-minutes: 10
+        env:
+          TESSERA_BENCH_BINARY: target/release/tessera-desktop.exe
+        run: pnpm bench:throughput
+      - name: Cold start
+        timeout-minutes: 6
+        env:
+          TESSERA_BENCH_BINARY: target/release/tessera-desktop.exe
+        run: pnpm bench:cold-start
+      - name: Memory
+        timeout-minutes: 6
+        env:
+          TESSERA_BENCH_BINARY: target/release/tessera-desktop.exe
+        run: pnpm bench:memory
+      - name: Scale (50 panes, NFR-13)
+        timeout-minutes: 10
+        env:
+          TESSERA_BENCH_BINARY: target/release/tessera-desktop.exe
+        run: pnpm bench:scale
+      - name: Put the numbers in the run summary
+        if: always()
+        shell: bash
+        run: |
+          echo "## Windows benchmarks" >> "$GITHUB_STEP_SUMMARY"
+          for f in docs/benchmarks.md .ai/research/bench.md; do
+            if [ -f "$f" ]; then tail -n 120 "$f" >> "$GITHUB_STEP_SUMMARY"; fi
+          done
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-benchmarks-${{ github.run_id }}
+          path: |
+            docs/benchmarks.md
+            .ai/research/bench.md
+          if-no-files-found: warn
+          retention-days: 30

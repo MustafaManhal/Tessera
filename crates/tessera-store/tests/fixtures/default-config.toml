@@ -1,0 +1,60 @@
+[appearance]
+theme-light = "GitHub Light"
+theme-dark = "Tessera Night"
+window-opacity = 1.0
+background-blur = true          # macOS vibrancy / Windows Mica
+ui-zoom = 1.0
+padding = 6                     # pixels between text and pane edge
+dim-unfocused = 0.0             # 0 to 0.6: dim panes without focus
+
+[font]
+family = "JetBrains Mono"
+size = 13
+line-height = 1.2
+ligatures = true
+features = ["calt", "ss01"]
+
+[terminal]
+engine = "xterm"                # "xterm" | "ghostty" (after M1.6)
+scrollback = 10000
+copy-on-select = false
+cursor-style = "block"          # block | bar | underline
+cursor-blink = true
+confirm-multiline-paste = false
+osc52 = "ask"                   # off | ask | allow (write only)
+shell-integration = true
+keep-sessions-running = false   # true: shells and agents keep running after Tessera quits
+long-command-notify-seconds = 30
+
+[shell]
+default = "auto"                # or a path, "pwsh", "wsl:Ubuntu"
+
+[quick-terminal]
+enabled = true
+hotkey = "Ctrl+`"
+height = 0.4
+hide-on-blur = true
+
+[worktrees]
+dir = "auto"                    # <repo parent>/.tessera-worktrees/<repo>
+branch-prefix = "tessera/"
+
+[notifications]
+agent-needs-input = true
+agent-done = true
+ci = true
+dnd-until = 0
+
+[editor]
+command = "code"                # code | cursor | zed | idea | custom: "subl {path}:{line}"
+
+[keybindings]
+"pane.splitRight" = "Cmd+D"
+"palette.open" = ["Cmd+K", "Cmd+Shift+P"]
+
+[api]
+socket = true
+mcp-server = false
+
+[updates]
+channel = "stable"              # stable | beta

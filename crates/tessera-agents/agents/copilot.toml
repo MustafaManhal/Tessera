@@ -1,0 +1,15 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "copilot"
+name = "GitHub Copilot"
+binaries = ["copilot"]
+version-cmd = ["copilot", "--version"]
+prompt-mode = "flag:-i"
+resume = ["copilot", "--resume", "{external_session_id}"]
+yolo-flags = ["--allow-all"]
+hooks = "none"
+install-url = "https://docs.github.com/en/copilot/get-started/cli-quickstart"
+docs-url = "https://docs.github.com/en/copilot/reference/cli-command-reference"
+icon = "github"
+model-flag = "--model"
+[usage]
+source = "none"

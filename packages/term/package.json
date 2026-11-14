@@ -1,0 +1,26 @@
+{
+  "name": "@tessera/term",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TerminalEngine adapter over xterm.js (TRD 4.2).",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3"
+  },
+  "dependencies": {
+    "@xterm/addon-clipboard": "0.2.0",
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/addon-image": "0.9.0",
+    "@xterm/addon-ligatures": "0.10.0",
+    "@xterm/addon-search": "0.16.0",
+    "@xterm/addon-unicode-graphemes": "0.4.0",
+    "@xterm/addon-web-links": "0.12.0",
+    "@xterm/addon-webgl": "0.19.0",
+    "@xterm/xterm": "6.0.0"
+  }
+}
