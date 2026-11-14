@@ -1,0 +1,44 @@
+name: "Windows 3: UI tests"
+
+# Manual, one workflow per Windows check. Start them one at a time (Actions, pick the workflow, Run workflow).
+# Proves on Windows: M1.3 (fonts, Unicode, cursor settings), M1.4 (search, links, paste, drop quoting), M3.x UI, M4.x keybindings with Ctrl chords.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ui:
+    name: UI tests (${{ matrix.platform }})
+    runs-on: windows-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-emulated, windows-native]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          rust: "false"
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+      - name: Run UI tests
+        env:
+          CI: "true"
+          TESSERA_DEV_PORT: "1422"
+          TESSERA_UI_PLATFORM: ${{ matrix.platform }}
+        run: pnpm test:ui
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-${{ matrix.platform }}-${{ github.run_id }}
+          path: |
+            playwright-report/**
+            apps/desktop/playwright-report/**
+            test-results/**
+            apps/desktop/test-results/**
+          if-no-files-found: warn
+          retention-days: 14

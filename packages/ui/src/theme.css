@@ -1,0 +1,173 @@
+/*
+ * Tailwind v4 theme: maps the tokens in `tokens.css` to utilities, so components write `bg-surface text-muted
+ * rounded-md shadow-dialog` and never a raw value. Import it after `@import "tailwindcss"` and `tokens.css`:
+ *
+ *   @import "tailwindcss";
+ *   @import "@tessera/ui/src/tokens.css";
+ *   @import "@tessera/ui/src/theme.css";
+ *
+ * `inline` makes each utility use the token itself (`background-color: var(--surface)`), so a `[data-theme]`
+ * subtree and the reduced-motion overrides apply where the class is used. Tailwind's default colours, sizes,
+ * radii, shadows, weights and easings are removed: only the design system exists.
+ *
+ * Utilities: colours bg | fg | muted | surface | surface-2 | surface-3 | border | border-strong | accent(-fg,
+ * -hover, -press) | danger(-fg, -hover, -press) | success | warning | st-<status> | st-<status>-tint | focus |
+ * overlay | term-bg | tab-<colour>. Text xs 11 | sm 12 | base 13 | lg 15 | xl 20. Spacing steps 0.5 1 1.5 2 3 4 5 6 8
+ * (2–32 px). Radius sm 4 | md 6 | lg 8 | xl 12. Shadows dialog | popover. Easing standard.
+ */
+
+/* packages/ui is outside the app's base path, so Tailwind must be told to scan it. */
+@source "./";
+
+@theme inline {
+  --color-*: initial;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-press: var(--accent-press);
+  --color-danger: var(--danger);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-press: var(--danger-press);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-st-working: var(--st-working);
+  --color-st-needs: var(--st-needs);
+  --color-st-done: var(--st-done);
+  --color-st-error: var(--st-error);
+  --color-st-off: var(--st-off);
+  --color-st-working-tint: var(--st-working-tint);
+  --color-st-needs-tint: var(--st-needs-tint);
+  --color-st-done-tint: var(--st-done-tint);
+  --color-st-error-tint: var(--st-error-tint);
+  --color-st-off-tint: var(--st-off-tint);
+  --color-focus: var(--focus-ring-color);
+  --color-overlay: var(--overlay);
+  --color-term-bg: var(--term-bg);
+  --color-tab-red: var(--tab-red);
+  --color-tab-orange: var(--tab-orange);
+  --color-tab-yellow: var(--tab-yellow);
+  --color-tab-green: var(--tab-green);
+  --color-tab-blue: var(--tab-blue);
+  --color-tab-purple: var(--tab-purple);
+
+  --font-*: initial;
+  --font-sans: var(--font-family-ui);
+  --font-mono: var(--font-family-mono);
+
+  --text-*: initial;
+  --text-xs: var(--font-size-xs);
+  --text-xs--line-height: var(--line-height-ui);
+  --text-sm: var(--font-size-sm);
+  --text-sm--line-height: var(--line-height-ui);
+  --text-base: var(--font-size-base);
+  --text-base--line-height: var(--line-height-ui);
+  --text-lg: var(--font-size-lg);
+  --text-lg--line-height: var(--line-height-ui);
+  --text-xl: var(--font-size-xl);
+  --text-xl--line-height: var(--line-height-ui);
+
+  --font-weight-*: initial;
+  --font-weight-normal: var(--weight-regular);
+  --font-weight-medium: var(--weight-medium);
+  --font-weight-semibold: var(--weight-semibold);
+
+  --leading-*: initial;
+  --leading-ui: var(--line-height-ui);
+  --leading-term: var(--line-height-term);
+
+  --spacing: var(--space-unit);
+
+  --radius-*: initial;
+  --radius-sm: var(--radius-badge);
+  --radius-md: var(--radius-control);
+  --radius-lg: var(--radius-card);
+  --radius-xl: var(--radius-dialog);
+
+  --shadow-*: initial;
+  --shadow-dialog: var(--elevation-dialog);
+  --shadow-popover: var(--elevation-popover);
+
+  --ease-*: initial;
+  --ease-standard: var(--motion-ease);
+
+  /* `transition-colors` and friends default to the hover fade. */
+  --default-transition-duration: var(--motion-fade-fast);
+  --default-transition-timing-function: var(--motion-ease);
+
+  /* Each enter animation pairs a fade (kept with reduced motion) with a movement (0 ms with reduced motion). */
+  --animate-*: initial;
+  --animate-spin: spin 1s linear infinite;
+  --animate-fade-in: fade-in var(--motion-fade) var(--motion-ease);
+  --animate-fade-out: fade-out var(--motion-fade-fast) var(--motion-ease);
+  --animate-dialog-in: fade-in var(--motion-fade) var(--motion-ease), zoom-in var(--motion-base) var(--motion-ease);
+  --animate-dialog-out:
+    fade-out var(--motion-fade-fast) var(--motion-ease), zoom-out var(--motion-fast) var(--motion-ease);
+  --animate-toast-in: fade-in var(--motion-fade) var(--motion-ease), slide-in var(--motion-base) var(--motion-ease);
+  --animate-toast-out: fade-out var(--motion-fade-fast) var(--motion-ease);
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes zoom-in {
+    from {
+      transform: scale(0.96);
+    }
+  }
+  @keyframes zoom-out {
+    to {
+      transform: scale(0.96);
+    }
+  }
+  @keyframes slide-in {
+    from {
+      transform: translateX(calc(100% + var(--space-16)));
+    }
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-family-ui);
+  }
+
+  body {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* §2 focus ring on every focusable element; a component overrides it only with a ring that is as visible. */
+  :focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* lucide icons: stroke 1.75 everywhere. */
+  .lucide {
+    stroke-width: var(--icon-stroke);
+  }
+}

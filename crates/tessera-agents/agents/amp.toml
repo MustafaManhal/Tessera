@@ -1,0 +1,14 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "amp"
+name = "Amp"
+binaries = ["amp"]
+version-cmd = ["amp", "version"]
+prompt-mode = "stdin"
+resume = ["amp", "threads", "continue", "{external_session_id}"]
+yolo-flags = []
+hooks = "none"
+install-url = "https://ampcode.com/docs/cli"
+docs-url = "https://ampcode.com/docs/cli"
+icon = "zap"
+[usage]
+source = "none"
