@@ -1,0 +1,53 @@
+# Shared toolchain setup for CI jobs: Node from .node-version, pnpm via corepack (version from package.json),
+# Rust from rust-toolchain.toml, Linux WebKitGTK packages for Tauri, cached pnpm store and Cargo, then install.
+name: Setup toolchain
+description: Node, pnpm, Rust and system packages for Tessera
+inputs:
+  rust:
+    description: Set up Rust and the Linux system packages ("true" or "false")
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: .node-version
+
+    - name: Enable pnpm (corepack)
+      shell: bash
+      run: |
+        corepack enable
+        echo "PNPM_STORE=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+    - uses: actions/cache@v4
+      with:
+        path: ${{ env.PNPM_STORE }}
+        key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: pnpm-${{ runner.os }}-
+
+    # Tauri v2 Linux prerequisites: https://v2.tauri.app/start/prerequisites/#linux
+    - name: Linux system packages
+      if: ${{ inputs.rust == 'true' && runner.os == 'Linux' }}
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+    # rustup is preinstalled on GitHub runners; this installs the channel and components from rust-toolchain.toml.
+    - name: Rust toolchain
+      if: ${{ inputs.rust == 'true' }}
+      shell: bash
+      run: rustup toolchain install
+
+    - uses: Swatinem/rust-cache@v2
+      if: ${{ inputs.rust == 'true' }}
+
+    # Test runner with bounded retries (.config/nextest.toml). `scripts/rust-test.mjs` uses it on CI.
+    - uses: taiki-e/install-action@v2
+      if: ${{ inputs.rust == 'true' }}
+      with:
+        tool: nextest
+
+    - name: Install
+      shell: bash
+      run: pnpm install --frozen-lockfile

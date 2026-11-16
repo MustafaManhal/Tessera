@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "pi"
+name = "Pi"
+binaries = ["pi"]
+version-cmd = ["pi", "--version"]
+prompt-mode = "type"
+resume = ["pi", "--session", "{external_session_id}"]
+yolo-flags = []
+hooks = "none"
+install-url = "https://github.com/earendil-works/pi/tree/main/packages/coding-agent"
+docs-url = "https://github.com/earendil-works/pi/tree/main/packages/coding-agent"
+icon = "bot"
+install-command = "npm install -g @earendil-works/pi-coding-agent"
+[usage]
+source = "none"

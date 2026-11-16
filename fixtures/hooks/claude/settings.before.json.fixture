@@ -1,0 +1,4 @@
+{
+  "unknown": {"keep": 1},
+  "hooks": { "Stop": [ {"hooks": [{"type":"command","command":"echo user-hook"}]} ] }
+}
