@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "jules"
+name = "Jules"
+binaries = ["jules"]
+version-cmd = ["jules", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = []
+hooks = "none"
+install-url = "https://jules.google/docs/cli/reference/"
+docs-url = "https://jules.google/docs/cli/reference/"
+icon = "bot"
+install-command = "npm install -g @google/jules"
+[usage]
+source = "none"

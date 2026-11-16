@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "freebuff"
+name = "Freebuff"
+binaries = ["freebuff"]
+version-cmd = ["freebuff", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = []
+hooks = "none"
+install-url = "https://freebuff.com"
+docs-url = "https://freebuff.com"
+icon = "bot"
+install-command = "npm install -g freebuff"
+[usage]
+source = "none"

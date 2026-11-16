@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ghostty Web spike</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        color: #ddd;
+        background: #17191f;
+        font: 14px ui-monospace, monospace;
+      }
+
+      #terminal {
+        width: min(100%, 1000px);
+        height: 500px;
+        margin-top: 16px;
+      }
+
+      #xterm-terminal {
+        width: min(100%, 1000px);
+        height: 500px;
+        margin-top: 16px;
+      }
+
+      #report {
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Ghostty Web / TerminalEngine compatibility spike</h1>
+    <p id="report">Loading Ghostty Web 0.4.0 from jsDelivr…</p>
+    <button id="flood" type="button" disabled>Run 100 MiB flood</button>
+    <div id="terminal"></div>
+    <h2>xterm.js 6.0.0 DOM baseline</h2>
+    <p id="xterm-report">Loading xterm baseline…</p>
+    <div id="xterm-terminal"></div>
+    <script type="module" src="./spike.js"></script>
+  </body>
+</html>

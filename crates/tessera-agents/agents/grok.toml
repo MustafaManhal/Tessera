@@ -1,0 +1,16 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "grok"
+name = "Grok"
+binaries = ["grok"]
+version-cmd = ["grok", "--version"]
+prompt-mode = "type"
+resume = ["grok", "-r", "{external_session_id}"]
+yolo-flags = ["--always-approve"]
+hooks = "none"
+install-url = "https://docs.x.ai/build/overview"
+docs-url = "https://docs.x.ai/build/overview"
+icon = "bot"
+install-command = "curl -fsSL https://x.ai/cli/install.sh | bash"
+install-command-windows = "irm https://x.ai/cli/install.ps1 | iex"
+[usage]
+source = "none"
