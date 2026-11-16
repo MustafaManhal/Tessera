@@ -1,0 +1,8 @@
+# >>> tessera-managed >>>
+notify = ["/fixture/tessera", "hook", "agent-turn-complete"]
+# <<< tessera-managed <<<
+# user comment
+model = "fixture-model" # keep inline comment
+
+[unknown]
+keep = true

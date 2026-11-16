@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "prime-agent"
+name = "Prime Agent"
+binaries = ["prime-agent"]
+version-cmd = ["prime-agent", "--version"]
+prompt-mode = "type"
+resume = ["prime-agent", "--resume", "{external_session_id}"]
+yolo-flags = []
+hooks = "none"
+install-url = "https://github.com/PrimeIntellect-ai/prime-agent"
+docs-url = "https://github.com/PrimeIntellect-ai/prime-agent"
+icon = "bot"
+install-command = "curl -fsSL https://app.primeintellect.ai/prime-agent/install.sh | sh"
+[usage]
+source = "none"

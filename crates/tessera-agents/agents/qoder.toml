@@ -1,0 +1,16 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "qoder"
+name = "Qoder CLI"
+binaries = ["qodercli"]
+version-cmd = ["qodercli", "--version"]
+prompt-mode = "type"
+resume = ["qodercli", "-r", "{external_session_id}"]
+yolo-flags = ["--yolo"]
+hooks = "none"
+install-url = "https://qoder.com/en/cli"
+docs-url = "https://qoder.com/en/cli"
+icon = "bot"
+install-command = "curl -fsSL https://qoder.com/install | bash"
+install-command-windows = "irm https://qoder.com/install.ps1 | iex"
+[usage]
+source = "none"

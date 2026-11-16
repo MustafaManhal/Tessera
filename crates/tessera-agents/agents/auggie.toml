@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "auggie"
+name = "Auggie"
+binaries = ["auggie"]
+version-cmd = ["auggie", "--version"]
+prompt-mode = "type"
+resume = ["auggie", "--resume", "{external_session_id}"]
+yolo-flags = []
+hooks = "none"
+install-url = "https://docs.augmentcode.com/cli/overview"
+docs-url = "https://docs.augmentcode.com/cli/overview"
+icon = "bot"
+install-command = "npm install -g @augmentcode/auggie"
+[usage]
+source = "none"

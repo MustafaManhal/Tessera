@@ -1,0 +1,68 @@
+name: "Windows 6: SSH login"
+
+# Manual, one workflow per Windows check. Proves M10.1 on Windows: a real password login with Windows OpenSSH
+# (ssh.exe in ConPTY), the saved password answered from Windows Credential Manager through SSH_ASKPASS by the tessera
+# CLI, and the known_hosts check that decides when askpass is used. The server is this runner's own OpenSSH Server
+# with a throwaway local user; nothing leaves the machine.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ssh:
+    name: Password login through the app's SSH plan
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      # Windows PowerShell 5.1: New-LocalUser lives there. The capability install can take a few minutes.
+      - name: Start an OpenSSH server and set a password on the runner account
+        shell: powershell
+        timeout-minutes: 15
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $cap = Get-WindowsCapability -Online -Name 'OpenSSH.Server*' | Select-Object -First 1
+          "OpenSSH Server capability: $($cap.Name) $($cap.State)"
+          if ($cap.State -ne 'Installed') { Add-WindowsCapability -Online -Name $cap.Name | Out-Null }
+          Start-Service sshd
+          Get-Service sshd | Format-Table -AutoSize | Out-String | Write-Output
+          $password = 'Ts-' + [guid]::NewGuid().ToString('N').Substring(0, 20) + '!aZ9'
+          Write-Output "::add-mask::$password"
+          # A throwaway local user was rejected by the runner's sshd ("invalid user"). Use the runner's own account, which
+          # sshd already knows, with a random password. The VM is discarded after the job.
+          $user = $env:USERNAME
+          "Using the runner account: $user"
+          net user $user $password | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw "net user failed: $LASTEXITCODE" }
+          Restart-Service sshd
+          [IO.File]::AppendAllText($env:GITHUB_ENV, "TESSERA_SSH_LIVE_PASSWORD=$password`nTESSERA_SSH_LIVE_USER=$user`n")
+          $sshDir = Join-Path $env:USERPROFILE '.ssh'
+          New-Item -ItemType Directory -Force $sshDir | Out-Null
+          # PowerShell 5.1 turns a native tool's stderr into an error under 'Stop'; ssh-keyscan and ssh -V write there.
+          $ErrorActionPreference = 'Continue'
+          $keys = & "$env:WINDIR\System32\OpenSSH\ssh-keyscan.exe" -p 22 localhost 2>$null | Where-Object { $_ -notmatch '^#' }
+          if (-not $keys) { throw 'ssh-keyscan returned no host keys' }
+          [IO.File]::AppendAllText((Join-Path $sshDir 'known_hosts'), (($keys -join "`n") + "`n"))
+          # Windows OpenSSH first, as on a user's machine (Git's ssh is not on a user's PATH by default).
+          [IO.File]::AppendAllText($env:GITHUB_PATH, "$env:WINDIR\System32\OpenSSH`n")
+          cmd /c "`"$env:WINDIR\System32\OpenSSH\ssh.exe`" -V 2>&1"
+
+      - name: Build the tessera CLI (the askpass helper)
+        run: cargo build --locked -p tessera-cli
+
+      - name: Log in with the saved password, ssh.exe in ConPTY
+        env:
+          TESSERA_SSH_LIVE_HOST: localhost
+          TESSERA_SSH_LIVE_PORT: "22"
+          TESSERA_SSH_LIVE_OPTS: -o StrictHostKeyChecking=yes
+        timeout-minutes: 20
+        run: cargo test --locked -p tessera-desktop --lib ssh_commands::tests::live_login_in_a_pty -- --ignored --nocapture
+
+      - name: Server log on failure
+        if: failure()
+        shell: powershell
+        run: Get-WinEvent -LogName 'OpenSSH/Operational' -MaxEvents 40 -ErrorAction SilentlyContinue | Format-List TimeCreated, Message
