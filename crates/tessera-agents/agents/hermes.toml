@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "hermes"
+name = "Hermes Agent"
+binaries = ["hermes"]
+version-cmd = ["hermes", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = ["--yolo"]
+hooks = "none"
+install-url = "https://hermes-agent.nousresearch.com/docs/"
+docs-url = "https://hermes-agent.nousresearch.com/docs/"
+icon = "bot"
+install-command = "curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash"
+[usage]
+source = "none"

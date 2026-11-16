@@ -1,0 +1,10 @@
+{
+  "session_id": "fixture-session",
+  "cwd": "/fixture/project",
+  "hook_event_name": "AfterAgent",
+  "transcript_path": "/fixture/transcript.json",
+  "timestamp": "2026-11-11T00:00:00Z",
+  "prompt": "Explain the fixture.",
+  "prompt_response": "Done.",
+  "stop_hook_active": false
+}

@@ -1,0 +1,52 @@
+---
+source: crates/tessera-shell/tests/shell.rs
+expression: plans
+---
+[
+    LaunchPlan {
+        args: [
+            "-i",
+        ],
+        env: {
+            "TESSERA_SHELL_DIR": "integration space",
+            "TESSERA_ZDOTDIR": "/custom zsh",
+            "TESSERA_ZDOTDIR_SET": "1",
+            "ZDOTDIR": "integration space/zsh",
+        },
+        injected: true,
+    },
+    LaunchPlan {
+        args: [
+            "--rcfile",
+            "integration space/bash.sh",
+            "-i",
+        ],
+        env: {
+            "TESSERA_SHELL_DIR": "integration space",
+        },
+        injected: true,
+    },
+    LaunchPlan {
+        args: [
+            "-i",
+        ],
+        env: {
+            "TESSERA_SHELL_DIR": "integration space",
+            "TESSERA_XDG_DATA_DIRS": "/custom/share:/other",
+            "TESSERA_XDG_DATA_DIRS_SET": "1",
+            "XDG_DATA_DIRS": "integration space:/custom/share:/other",
+        },
+        injected: true,
+    },
+    LaunchPlan {
+        args: [
+            "-NoExit",
+            "-Command",
+            ". 'integration space/powershell.ps1'",
+        ],
+        env: {
+            "TESSERA_SHELL_DIR": "integration space",
+        },
+        injected: true,
+    },
+]

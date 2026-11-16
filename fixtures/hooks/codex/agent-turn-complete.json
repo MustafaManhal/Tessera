@@ -1,0 +1,8 @@
+{
+  "type": "agent-turn-complete",
+  "thread-id": "fixture-thread",
+  "turn-id": "fixture-turn",
+  "cwd": "/fixture/project",
+  "input-messages": ["Explain the fixture."],
+  "last-assistant-message": "Done."
+}

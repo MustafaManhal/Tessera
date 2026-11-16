@@ -1,0 +1,90 @@
+---
+source: crates/tessera-shell/tests/shell.rs
+expression: summary
+---
+[
+    (
+        Zsh,
+        [
+            (
+                "TESSERA_SHELL_DIR",
+                "integration space",
+            ),
+            (
+                "ZDOTDIR",
+                "integration space/zsh",
+            ),
+        ],
+        [
+            "-i",
+        ],
+    ),
+    (
+        Bash,
+        [
+            (
+                "TESSERA_SHELL_DIR",
+                "integration space",
+            ),
+        ],
+        [
+            "--rcfile",
+            "integration space/bash.sh",
+            "-i",
+        ],
+    ),
+    (
+        GitBash,
+        [
+            (
+                "TESSERA_SHELL_DIR",
+                "integration space",
+            ),
+        ],
+        [
+            "--rcfile",
+            "integration space/bash.sh",
+            "-i",
+        ],
+    ),
+    (
+        Fish,
+        [
+            (
+                "TESSERA_SHELL_DIR",
+                "integration space",
+            ),
+            (
+                "XDG_DATA_DIRS",
+                "integration space:/usr/local/share:/usr/share",
+            ),
+        ],
+        [
+            "-i",
+        ],
+    ),
+    (
+        PowerShell,
+        [
+            (
+                "TESSERA_SHELL_DIR",
+                "integration space",
+            ),
+        ],
+        [
+            "-NoExit",
+            "-Command",
+            ". 'integration space/powershell.ps1'",
+        ],
+    ),
+    (
+        Cmd,
+        [],
+        [],
+    ),
+    (
+        Wsl,
+        [],
+        [],
+    ),
+]

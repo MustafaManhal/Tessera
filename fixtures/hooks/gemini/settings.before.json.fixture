@@ -1,0 +1,4 @@
+{
+  "theme": "fixture",
+  "hooks": { "AfterAgent": [{"hooks":[{"type":"command","name":"user-hook","command":"echo user-hook"}]}] }
+}
