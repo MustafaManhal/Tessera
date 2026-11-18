@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>dev.tessera.terminal.tesserad</string>
+	<key>CFBundleName</key>
+	<string>Tessera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Programs running in a Tessera terminal, such as an agent's voice input, can use the microphone when you ask them to.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Programs running in a Tessera terminal can use the camera when you ask them to.</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Programs running in a Tessera terminal can control other apps when you ask them to.</string>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files in your Desktop folder when you ask them to.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files in your Documents folder when you ask them to.</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>Programs running in a Tessera terminal can read and write files in your Downloads folder when you ask them to.</string>
+</dict>
+</plist>
