@@ -1,0 +1,28 @@
+name: "Windows 1: Rust core"
+
+# Manual, one workflow per Windows check. Start them one at a time (Actions, pick the workflow, Run workflow).
+# Proves on Windows: M1.1 (PTY host, ConPTY), M5.1 (git engine, NTFS), M5.2 and M5.3 backend (store, tasks, ports),
+# M8.1 (tesserad: ConPTY sessions outlive the client that started them and re-attach with their scrollback).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rust-core:
+    name: Rust tests on Windows (all crates)
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Rust tests (nextest, CI profile)
+        run: cargo nextest run --workspace --profile ci
+      - name: Doc tests
+        run: cargo test --workspace --doc
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          echo "Windows 1 (Rust core): ConPTY host, shell integration, git engine on NTFS, store and tasks. Status ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"

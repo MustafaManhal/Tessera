@@ -1,0 +1,129 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, join } from "node:path";
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import { parseUpdateNotes, RELEASES, releasesBetween } from "../../src/updates/whatsnew";
+// @ts-expect-error plain .mjs script without types
+import * as lib from "../../../../scripts/release-lib.mjs";
+// @ts-expect-error plain .mjs script without types
+import * as pack from "../../../../scripts/package.mjs";
+
+const { installers, MAX_INSTALLER_BYTES, oversized, signedAssets, updateManifest, updateNotes, whatsNewReleases } = lib;
+const { assertNoRedistributable, bundleOverride, helperBuild, helperTargets } = pack;
+
+describe("release helpers", () => {
+  it("finds installers and flags the ones over 25 MB", () => {
+    const dir = mkdtempSync(join(tmpdir(), "tessera-size-"));
+    mkdirSync(join(dir, "dmg"));
+    writeFileSync(join(dir, "dmg", "Tessera_0.1.0_universal.dmg"), Buffer.alloc(1000));
+    writeFileSync(join(dir, "Tessera_0.1.0_x64-setup.exe"), Buffer.alloc(2000));
+    writeFileSync(join(dir, "notes.txt"), "not an installer");
+    writeFileSync(join(dir, "rw.123.Tessera_0.1.0_aarch64.dmg"), Buffer.alloc(50_000_000));
+    const files = installers(dir);
+    expect(files.map((f: { path: string }) => basename(f.path)).sort()).toEqual([
+      "Tessera_0.1.0_universal.dmg",
+      "Tessera_0.1.0_x64-setup.exe",
+    ]);
+    expect(oversized(files)).toEqual([]);
+    expect(oversized(files, 1500)).toHaveLength(1);
+    expect(MAX_INSTALLER_BYTES).toBe(25_000_000);
+  });
+
+  it("builds the update manifest per platform, sharing the universal Mac bundle", () => {
+    const manifest = updateManifest({
+      version: "0.2.0",
+      notes: "Notes",
+      date: "2026-12-01T00:00:00Z",
+      baseUrl: "https://example.com/dl",
+      assets: [
+        { name: "Tessera.app.tar.gz", signature: "SIG-MAC\n" },
+        { name: "Tessera_0.2.0_x64-setup.exe", signature: "SIG-X64" },
+        { name: "Tessera_0.2.0_arm64-setup.exe", signature: "SIG-ARM" },
+        { name: "Tessera_0.2.0_x64_en-US.msi", signature: "IGNORED" },
+      ],
+    });
+    expect(Object.keys(manifest.platforms).sort()).toEqual([
+      "darwin-aarch64",
+      "darwin-x86_64",
+      "windows-aarch64",
+      "windows-x86_64",
+    ]);
+    expect(manifest.platforms["darwin-aarch64"]).toEqual({
+      signature: "SIG-MAC",
+      url: "https://example.com/dl/Tessera.app.tar.gz",
+    });
+    expect(manifest.platforms["windows-aarch64"].signature).toBe("SIG-ARM");
+    expect(manifest.version).toBe("0.2.0");
+  });
+
+  it("refuses a manifest without update bundles and reads signatures from disk", () => {
+    expect(() => updateManifest({ version: "1", notes: "", date: "", baseUrl: "u", assets: [] })).toThrow();
+    const dir = mkdtempSync(join(tmpdir(), "tessera-sig-"));
+    writeFileSync(join(dir, "Tessera.app.tar.gz.sig"), "abc\n");
+    writeFileSync(join(dir, "Tessera.app.tar.gz"), "bundle");
+    expect(signedAssets(dir)).toEqual([{ name: "Tessera.app.tar.gz", signature: "abc\n" }]);
+  });
+
+  it("packages the helpers for every architecture of a universal Mac build", () => {
+    expect(helperTargets("universal-apple-darwin", "aarch64-apple-darwin")).toEqual([
+      "aarch64-apple-darwin",
+      "x86_64-apple-darwin",
+    ]);
+    expect(helperTargets(undefined, "x86_64-pc-windows-msvc")).toEqual(["x86_64-pc-windows-msvc"]);
+    expect(helperTargets("aarch64-pc-windows-msvc", "x86_64-pc-windows-msvc")).toEqual(["aarch64-pc-windows-msvc"]);
+    expect(bundleOverride({ updater: false }).bundle.createUpdaterArtifacts).toBeUndefined();
+    expect(bundleOverride({ updater: true }).bundle.createUpdaterArtifacts).toBe(true);
+    expect(bundleOverride({ updater: false }).bundle.externalBin).toEqual(["binaries/tesserad", "binaries/tessera"]);
+    expect(bundleOverride({ updater: false }).bundle.windows.nsis.installerHooks).toMatch(/installer-hooks\.nsh$/);
+  });
+
+  it("links the C runtime into the Windows helpers so they start without the Visual C++ Redistributable", () => {
+    const windows = helperBuild("x86_64-pc-windows-msvc", { RUSTFLAGS: "-D warnings", PATH: "p" }, "/repo");
+    expect(windows.env.RUSTFLAGS).toBe("-D warnings -C target-feature=+crt-static");
+    expect(windows.env.PATH).toBe("p");
+    expect(windows.env.CARGO_TARGET_DIR).toBe(windows.targetDir);
+    expect(windows.targetDir).toBe(join("/repo", "target", "static-crt"));
+    expect(windows.forceTarget).toBe(true);
+    expect(helperBuild("aarch64-pc-windows-msvc", {}, "/repo").env.RUSTFLAGS).toBe("-C target-feature=+crt-static");
+
+    const mac = helperBuild("aarch64-apple-darwin", { PATH: "p" }, "/repo");
+    expect(mac).toEqual({ env: { PATH: "p" }, targetDir: join("/repo", "target"), forceTarget: false });
+  });
+
+  it("refuses to package a Windows program that needs VCRUNTIME140.dll", () => {
+    const imports = (path: string) => (path.endsWith("tesserad.exe") ? ["VCRUNTIME140.dll"] : []);
+    expect(() => assertNoRedistributable(["a/tessera.exe"], imports)).not.toThrow();
+    expect(() => assertNoRedistributable(["a/tessera.exe", "a/tesserad.exe"], imports)).toThrow(
+      /a\/tesserad\.exe: VCRUNTIME140\.dll/,
+    );
+  });
+});
+
+describe("update notes", () => {
+  const source = readFileSync(new URL("../../src/updates/whatsnew.ts", import.meta.url), "utf8");
+
+  it("reads every What's new entry from whatsnew.ts", () => {
+    expect(whatsNewReleases(source)).toEqual(RELEASES);
+  });
+
+  it("covers only the new release, and the app reads it back", () => {
+    const releases = whatsNewReleases(source);
+    const latest = releases[0].version;
+    const text = updateNotes(releases, latest);
+    expect(text.startsWith(`Tessera ${latest} (`)).toBe(true);
+    expect(parseUpdateNotes(text)).toEqual(releases.slice(0, 1));
+    expect(parseUpdateNotes(updateNotes(releases, latest, 3))).toEqual(releases.slice(0, 3));
+    expect(updateNotes(releases, "9.9.9")).toBe("Tessera 9.9.9");
+  });
+
+  it("an app on 0.1.15 sees 0.1.16 to 0.1.18; notes in another shape stay plain text", () => {
+    expect(releasesBetween("0.1.15", "0.1.18").map((release) => release.version)).toEqual([
+      "0.1.18",
+      "0.1.17",
+      "0.1.16",
+    ]);
+    expect(parseUpdateNotes("Tessera 0.1.17")).toBeNull();
+    expect(parseUpdateNotes("Faster startup.\n- Fixes")).toBeNull();
+  });
+});

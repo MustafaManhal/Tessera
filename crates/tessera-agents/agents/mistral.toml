@@ -1,0 +1,16 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "mistral"
+name = "Mistral Vibe"
+binaries = ["vibe"]
+version-cmd = ["vibe", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = ["--agent", "auto-approve"]
+hooks = "none"
+install-url = "https://github.com/mistralai/mistral-vibe"
+docs-url = "https://github.com/mistralai/mistral-vibe"
+icon = "bot"
+install-command = "curl -LsSf https://mistral.ai/vibe/install.sh | bash"
+install-command-windows = "uv tool install mistral-vibe"
+[usage]
+source = "none"

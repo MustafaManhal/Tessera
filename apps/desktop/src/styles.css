@@ -1,0 +1,228 @@
+/* The app's one Tailwind entry: Tailwind, then the design tokens and their theme mapping (packages/ui). */
+@import "tailwindcss";
+@import "@tessera/ui/src/tokens.css";
+@import "@tessera/ui/src/theme.css";
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* The window is an app, not a page: it never scrolls as a whole (a few spare pixels used to make it scroll and push
+   the bars out of view). Panels that need to scroll do so inside themselves. */
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#root {
+  opacity: var(--window-opacity, 1);
+}
+
+/* Space between a terminal's text and its pane edge: `appearance.padding` (ThemeHost sets the variable). */
+[data-terminal] {
+  padding: var(--terminal-padding, 6px);
+}
+
+/* Scroll areas that show their own buttons instead of a scrollbar (the tab strip). */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* The focused pane when a tab shows more than one: the focus-ring token drawn inside the pane's edge. */
+.pane-focus-ring {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-width) * -1);
+}
+
+/*
+ * Command block gutter (M2.2). Each block is an xterm decoration on its prompt line, stretched to the row's width:
+ * a separator on its top edge, the status dot in the 16 px column left of the text, the duration at the right end.
+ * The row lets the pointer through to the text; only the dot takes it.
+ */
+[data-terminal] {
+  --block-gutter: 16px;
+}
+[data-terminal][data-block-gutter="on"] {
+  padding-inline-start: var(--block-gutter);
+}
+.block-row {
+  pointer-events: none;
+}
+.block-sep {
+  position: absolute;
+  top: 0;
+  left: calc(var(--block-gutter) * -1);
+  right: 0;
+  border-top: var(--border-width) solid var(--border);
+}
+.block-row[data-first="true"] .block-sep {
+  display: none;
+}
+.block-dot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--block-gutter) * -1);
+  width: var(--block-gutter);
+  pointer-events: auto;
+  cursor: pointer;
+}
+.block-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 9999px;
+  background: var(--st-off);
+  box-sizing: border-box;
+}
+.block-row[data-status="prompt"] .block-dot,
+.block-row[data-status="input"] .block-dot {
+  display: none;
+}
+.block-row[data-status="success"] .block-dot::before {
+  background: var(--st-done);
+}
+.block-row[data-status="failure"] .block-dot::before {
+  background: var(--st-error);
+}
+.block-row[data-status="aborted"] .block-dot::before {
+  background: transparent;
+  border: 2px solid var(--st-off);
+}
+.block-row[data-status="running"] .block-dot::before {
+  background: transparent;
+  border: 2px solid var(--st-working);
+  border-top-color: transparent;
+  animation: block-spin 1s linear infinite;
+}
+@keyframes block-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .block-row[data-status="running"] .block-dot::before {
+    animation: none;
+    border-top-color: var(--st-working);
+    border-style: dotted;
+  }
+}
+.block-row[data-selected="true"] .block-dot::before {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.block-duration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-inline: 4px;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  background: var(--term-bg);
+}
+.block-duration:empty {
+  display: none;
+}
+
+/* Collapsed output: an opaque cover over the rows (the text stays in the buffer, so Find still matches it). */
+.block-cover-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+.block-cover {
+  position: absolute;
+  background: var(--term-bg);
+  pointer-events: auto;
+  border-top: var(--border-width) dashed var(--border);
+}
+.block-cover-bar {
+  margin: 2px 0;
+  min-height: 24px;
+  padding-inline: 8px;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  background: var(--surface);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-badge);
+  cursor: pointer;
+}
+.block-cover-bar:hover {
+  color: var(--text);
+}
+
+/* Agent attention ring (brief 32): pulses once when a pane starts needing the user; static with reduced motion. */
+.attention-ring {
+  outline: 2px solid var(--st-needs);
+  outline-offset: -2px;
+  animation: attention-pulse 180ms ease-out 1;
+}
+@keyframes attention-pulse {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .attention-ring {
+    animation: none;
+  }
+}
+.attention-ring[data-kind="done"] {
+  outline-color: var(--st-done);
+}
+
+/*
+ * Baby-blue polish: text selection, scrollbars and one shared fade for everything you can hover. The colours come from
+ * the accent tokens, so a different accent recolours all of it. Reduced motion shortens every transition to nothing
+ * (packages/ui tokens.css).
+ */
+::selection {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent-ink) 45%, transparent) transparent;
+}
+
+button,
+[role="tab"],
+[role="treeitem"],
+[role="radio"],
+[role="switch"],
+a,
+input,
+textarea {
+  transition:
+    background-color var(--motion-fade-fast) var(--motion-ease),
+    border-color var(--motion-fade-fast) var(--motion-ease),
+    color var(--motion-fade-fast) var(--motion-ease),
+    box-shadow var(--motion-fade-fast) var(--motion-ease);
+}
+
+/* The accent mark under the active sidebar row and the open tab slides in instead of snapping. */
+@keyframes accent-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+[role="tab"][aria-selected="true"] > span[aria-hidden]:first-child {
+  transform-origin: left;
+  animation: accent-grow var(--motion-base) var(--motion-ease);
+}

@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "kiro"
+name = "Kiro (AWS)"
+binaries = ["kiro-cli"]
+version-cmd = ["kiro-cli", "--version"]
+prompt-mode = "type"
+resume = ["kiro-cli", "--resume-id", "{external_session_id}"]
+yolo-flags = ["--trust-all-tools"]
+hooks = "none"
+install-url = "https://kiro.dev/docs/cli/"
+docs-url = "https://kiro.dev/docs/cli/"
+icon = "bot"
+install-command = "curl -fsSL https://cli.kiro.dev/install | bash"
+[usage]
+source = "none"

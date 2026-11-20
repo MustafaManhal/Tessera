@@ -1,0 +1,11 @@
+# Tessera sync server (M11, D-07). Deploy: pnpm --filter @tessera/sync-worker exec wrangler deploy (see README.md).
+name = "tessera-sync"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tessera-sync"
+database_id = "3c76f6bb-9178-4b4d-b9dc-07ca6b0b1a27"
+migrations_dir = "migrations"
