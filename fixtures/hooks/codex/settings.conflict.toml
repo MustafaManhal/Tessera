@@ -1,0 +1,5 @@
+# owned by the user
+notify = ["user-notifier", "--keep"]
+
+[unknown]
+keep = true

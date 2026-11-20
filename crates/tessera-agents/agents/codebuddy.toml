@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "codebuddy"
+name = "CodeBuddy Code"
+binaries = ["codebuddy", "cbc"]
+version-cmd = ["codebuddy", "--version"]
+prompt-mode = "type"
+resume = ["codebuddy", "--resume", "{external_session_id}"]
+yolo-flags = ["--dangerously-skip-permissions"]
+hooks = "none"
+install-url = "https://www.codebuddy.ai/docs/cli/README"
+docs-url = "https://www.codebuddy.ai/docs/cli/README"
+icon = "bot"
+install-command = "npm install -g @tencent-ai/codebuddy-code"
+[usage]
+source = "none"

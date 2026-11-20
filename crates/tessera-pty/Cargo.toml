@@ -1,0 +1,22 @@
+[package]
+name = "tessera-pty"
+description = "PTY sessions: spawn, read, write, resize, coalescing, flow control (TRD 4.1)."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+portable-pty = "0.9"
+thiserror = "2.0.21"
+tracing = "0.1.44"
+ulid = "3.0.0"
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+serde_json = "1.0.154"
+tempfile = "3.27.0"
+tessera-shell = { path = "../tessera-shell" }
+tungstenite = "0.30.0"
