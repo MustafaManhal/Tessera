@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "muse"
+name = "Muse Code"
+binaries = ["muse"]
+version-cmd = ["muse", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = []
+hooks = "none"
+install-url = "https://dev.meta.ai/docs/muse-code"
+docs-url = "https://dev.meta.ai/docs/muse-code"
+icon = "bot"
+install-command = "curl -fsSL https://dev.meta.ai/install.sh | bash"
+[usage]
+source = "none"

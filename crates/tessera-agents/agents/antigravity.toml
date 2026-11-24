@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "antigravity"
+name = "Antigravity"
+binaries = ["agy", "antigravity"]
+version-cmd = ["agy", "--version"]
+prompt-mode = "flag:-i"
+resume = ["agy", "--conversation={external_session_id}"]
+yolo-flags = ["--dangerously-skip-permissions"]
+hooks = "none"
+install-url = "https://antigravity.google/docs/cli-overview"
+docs-url = "https://antigravity.google/docs/cli-overview"
+icon = "orbit"
+install-command = "curl -fsSL https://antigravity.google/cli/install.sh | bash"
+[usage]
+source = "none"

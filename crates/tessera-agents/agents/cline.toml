@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "cline"
+name = "Cline"
+binaries = ["cline"]
+version-cmd = ["cline", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = ["--yolo"]
+hooks = "none"
+install-url = "https://docs.cline.bot/cline-cli/overview"
+docs-url = "https://docs.cline.bot/cline-cli/overview"
+icon = "bot"
+install-command = "npm install -g cline"
+[usage]
+source = "none"

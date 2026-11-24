@@ -1,0 +1,13 @@
+{
+  "name": "@tessera/sync-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tessera sync server: a Cloudflare Worker with D1 that stores end-to-end encrypted blobs (M11).",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3"
+  }
+}

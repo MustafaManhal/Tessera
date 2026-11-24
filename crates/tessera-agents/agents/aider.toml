@@ -1,0 +1,17 @@
+# Verified sources and uncertainties: .ai/research/agents.md (2026-11-11).
+id = "aider"
+name = "Aider"
+binaries = ["aider"]
+version-cmd = ["aider", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = ["--yes-always"]
+hooks = "none"
+install-url = "https://aider.chat/docs/install.html"
+docs-url = "https://aider.chat/docs/config/options.html"
+icon = "message-square"
+model-flag = "--model"
+install-command = "python3 -m pip install aider-install && aider-install"
+install-command-windows = "python -m pip install aider-install; aider-install"
+[usage]
+source = "none"

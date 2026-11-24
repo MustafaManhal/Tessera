@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "junie"
+name = "Junie"
+binaries = ["junie"]
+version-cmd = ["junie", "--version"]
+prompt-mode = "flag:--task"
+resume = []
+yolo-flags = []
+hooks = "none"
+install-url = "https://junie.jetbrains.com/docs/junie-cli.html"
+docs-url = "https://junie.jetbrains.com/docs/junie-cli.html"
+icon = "bot"
+install-command = "curl -fsSL https://junie.jetbrains.com/install.sh | bash"
+[usage]
+source = "none"

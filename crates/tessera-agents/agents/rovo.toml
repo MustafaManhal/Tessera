@@ -1,0 +1,16 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "rovo"
+name = "Rovo Dev"
+binaries = ["acli"]
+args = ["rovodev", "run"]
+version-cmd = ["acli", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = []
+hooks = "none"
+install-url = "https://support.atlassian.com/rovo/docs/install-and-run-rovo-dev-cli-on-your-device/"
+docs-url = "https://support.atlassian.com/rovo/docs/install-and-run-rovo-dev-cli-on-your-device/"
+icon = "bot"
+install-command = "brew tap atlassian/homebrew-acli && brew install acli"
+[usage]
+source = "none"

@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "zero"
+name = "Zero"
+binaries = ["zero"]
+version-cmd = ["zero", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = []
+hooks = "none"
+install-url = "https://zero.gitlawb.com/"
+docs-url = "https://zero.gitlawb.com/"
+icon = "bot"
+install-command = "npm install -g @gitlawb/zero"
+[usage]
+source = "none"
