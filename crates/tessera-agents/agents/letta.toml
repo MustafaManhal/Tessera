@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "letta"
+name = "Letta"
+binaries = ["letta"]
+version-cmd = ["letta", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = ["--yolo"]
+hooks = "none"
+install-url = "https://docs.letta.com/letta-code/cli"
+docs-url = "https://docs.letta.com/letta-code/cli"
+icon = "bot"
+install-command = "npm install -g @letta-ai/letta-code"
+[usage]
+source = "none"

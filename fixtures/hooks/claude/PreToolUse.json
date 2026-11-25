@@ -1,0 +1,12 @@
+{
+  "session_id": "fixture-session",
+  "cwd": "/fixture/project",
+  "hook_event_name": "PreToolUse",
+  "transcript_path": "/fixture/transcript.jsonl",
+  "permission_mode": "default",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "pwd"
+  },
+  "tool_use_id": "fixture-tool"
+}

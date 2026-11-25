@@ -1,0 +1,16 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "kimi"
+name = "Kimi"
+binaries = ["kimi"]
+version-cmd = ["kimi", "--version"]
+prompt-mode = "type"
+resume = ["kimi", "-S", "{external_session_id}"]
+yolo-flags = ["--yolo"]
+hooks = "none"
+install-url = "https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html"
+docs-url = "https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html"
+icon = "bot"
+install-command = "curl -LsSf https://code.kimi.com/install.sh | bash"
+install-command-windows = "irm https://code.kimi.com/install.ps1 | iex"
+[usage]
+source = "none"

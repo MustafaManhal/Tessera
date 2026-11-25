@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "commandcode"
+name = "Command Code"
+binaries = ["command-code", "commandcode", "cmdc"]
+version-cmd = ["command-code", "--version"]
+prompt-mode = "type"
+resume = ["command-code", "--resume", "{external_session_id}"]
+yolo-flags = ["--yolo"]
+hooks = "none"
+install-url = "https://commandcode.ai/docs/reference/cli"
+docs-url = "https://commandcode.ai/docs/reference/cli"
+icon = "bot"
+install-command = "npm install -g command-code"
+[usage]
+source = "none"

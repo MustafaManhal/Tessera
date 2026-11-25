@@ -1,0 +1,296 @@
+// What's new (FR-75): the notes of every release, newest first. Add an entry per release before building it. The
+// dialog shows the running version, or after an update every version since the last one seen. The update manifest's
+// notes are built from these entries too (scripts/update-notes.mjs), one "Tessera <version> (<date>)" section each.
+export interface ReleaseNotes {
+  version: string;
+  date: string;
+  highlights: string[];
+}
+
+export const RELEASES: ReleaseNotes[] = [
+  {
+    version: "0.1.22",
+    date: "2026-11-25",
+    highlights: [
+      "Start an agent in one click: the robot button in the title bar lists the agents installed on this computer, and picking one starts it in the open task's terminal, so you no longer type claude yourself.",
+      "Quitting with Command+Q and opening Tessera again continues each tab's own Claude conversation, also one you reopened with /resume or started over with /clear. The restored command is typed cleanly, without stray characters in front of it.",
+      "Claude Code's screen is no longer cut off at the bottom: the input box's border and the status line show again, in full screen and in a window.",
+      "Full screen on a Mac with a notch looks right again (0.1.21 was built with an older macOS SDK).",
+      "A new tab opens in your home folder. The + button asks: your home folder, or a folder you choose.",
+      "Pasting an image file you copied in Finder now pastes its path, so Claude Code attaches the picture instead of a grey file icon. A screenshot copied straight to the clipboard still pastes as an image.",
+      "Task names in the sidebar use your theme's accent: the task in front stands out in full colour, the others are dimmed, and a task whose agent is working carries a moving gradient, also for agents you type in a terminal.",
+      "An agent's command no longer shows a spinner that turns for the whole session.",
+      "Restarting to finish an update no longer loses the terminals' history or reports a crash.",
+    ],
+  },
+  {
+    version: "0.1.21",
+    date: "2026-11-24",
+    highlights: [
+      "Updates download by themselves in the background on macOS and Windows. When one is ready, Tessera asks you to restart; choose Later and the status bar keeps the restart one click away. Settings, Updates still checks on demand.",
+      "Tessera no longer opens a home terminal on its own at start. With nothing to bring back the window starts empty, and you open the terminal you want.",
+      "New terminal button next to the sidebar filter: open a terminal in your home folder, or pick any folder for it.",
+      "Clear terminal: the eraser button in the title bar clears the screen and the scrollback, like typing clear. On macOS Command+K now clears the terminal (the command palette stays on Command+Shift+P); on Windows it is Ctrl+Shift+K.",
+      "A task whose agent is working shows its name with a soft moving gradient in the sidebar.",
+      "On Windows, closing the window keeps Tessera running with your terminals and agents, like on macOS. The icon in the notification area brings it back or quits, and starting Tessera again shows the running window.",
+      "Your last session is safer: a slow start no longer replaces your saved tabs with an empty window.",
+    ],
+  },
+  {
+    version: "0.1.20",
+    date: "2026-11-20",
+    highlights: [
+      "Tessera now sends error reports and usage data automatically: crashes, errors, its own log and counts of the app actions you use, with passwords, tokens and your home folder removed. Terminal output, what you type and your files are never sent. Problems get fixed without you having to report them; turn it off in Settings, Privacy.",
+    ],
+  },
+  {
+    version: "0.1.19",
+    date: "2026-11-20",
+    highlights: [
+      "Agents come back after a restart, a crash or an update: Claude Code and Codex, whether you started them from the agent menu or typed them into a terminal, continue their own conversation in the same pane. OpenCode continues its latest one.",
+      "Tessera follows each agent's conversation as it changes (also after /clear or /resume), so two agents in the same folder never swap conversations. An agent you quit yourself stays closed.",
+      "Updating on Windows no longer stops with a Failed to kill Tessera message: the installer waits until Tessera has fully closed.",
+      "Settings, Updates shows only what the new version brings.",
+      "Sidebar: only the project you are working in reads in white, the task in front in the accent colour, and its dot is filled.",
+    ],
+  },
+  {
+    version: "0.1.18",
+    date: "2026-11-18",
+    highlights: [
+      "Reopening Tessera resumes your agents again: a Claude Code, Codex or OpenCode tab continues its last conversation in the same folder.",
+      "On macOS, closing the window keeps Tessera running with your terminals and agents. Click the Dock icon to bring it back; Quit (Cmd+Q) ends it.",
+      "Projects in the sidebar start collapsed, and only the project of the task you are on opens. A filter still finds tasks in collapsed projects.",
+      "Only active projects carry a label now. Tasks with an open terminal show in the accent colour, the others are greyed out.",
+      "A shorter first-run tour that explains the idea of Tessera in four cards, with its buttons always in view. Importing settings from Ghostty, iTerm2 or Windows Terminal moved to Settings.",
+      "After an update, What's new lists every version since the one you had, and Settings, Updates shows the notes of all of them before you install.",
+    ],
+  },
+  {
+    version: "0.1.17",
+    date: "2026-11-16",
+    highlights: [
+      "Right-click in a terminal to Copy, Paste or Select all, on macOS and Windows. The cursor goes back to the terminal after you pick an item.",
+      "Pasting from the menu, the palette or a middle click no longer shows a clipboard permission box on Windows or an extra Paste bubble on macOS. A copied image still reaches Claude Code.",
+      "Git init in Tessera always starts the repository on main (not master), also with git older than 2.28, and makes an empty first commit.",
+      "A repository with no commits gets an empty first commit when you create a task, so the task branch can be made. Your files and staged changes stay as they were.",
+      "That first commit works even when git has no name or email set, as on a fresh Windows install.",
+      "When Git is not installed, Tessera says so on start and offers to install it: winget on Windows, Apple's command line tools on macOS, or the Git download page. Check again confirms it.",
+      "On Windows, a Git installed while Tessera is open is found without a restart.",
+      "The Git dialog also opens when something fails because Git cannot start, and from the palette (Check for Git).",
+    ],
+  },
+  {
+    version: "0.1.16",
+    date: "2026-11-16",
+    highlights: [
+      "Git init always starts on main, also with git before 2.28.",
+      "Every agent Tessera installs or finds runs when its name is typed in a Windows terminal.",
+      "Typing claude in a Windows terminal finds it when its installer left it off PATH.",
+      "Scroll back to the start of a terminal session on Windows 10.",
+      "Windows copy and paste, the VCRUNTIME140.dll error, the PowerShell script error and the localhost permission box.",
+    ],
+  },
+  {
+    version: "0.1.15",
+    date: "2026-11-16",
+    highlights: [
+      "Windows: Ctrl+C copies selected text (with nothing selected it still stops the running command) and Ctrl+V pastes text, or a copied image into Claude Code, like Windows Terminal.",
+      "Fixed on Windows: the VCRUNTIME140.dll was not found error at start-up. The session daemon and the tessera command no longer need the Visual C++ Redistributable, so terminals keep running when you close the app.",
+      "Fixed on Windows: the running scripts is disabled on this system error in every new PowerShell terminal. Shell integration now loads without changing your execution policy.",
+      "Fixed on Windows: the Allow / Block box for tauri.localhost no longer appears; notifications work without it.",
+      "Fixed on Windows 10: scrolling back to the start of a terminal session. Resizing no longer doubles lines or pushes the beginning out of the scrollback.",
+      "Windows: typing claude (or another agent installed in its usual folder in your user profile) in a terminal now works even when its installer did not add it to PATH.",
+    ],
+  },
+  {
+    version: "0.1.14",
+    date: "2026-11-16",
+    highlights: [
+      "39 coding agents, including every agent Emdash lists (Antigravity, Devin, Cline, Goose, Grok, Kimi, Kiro and more). An agent that is not installed shows its install command with Copy and Install buttons in Settings, Agents.",
+      "A sound plays when any agent finishes or needs you. Turn it off or pick another sound in Settings, Notifications.",
+      "The notifications bell sits next to broadcast in the status bar and keeps everything Tessera tells you: agents started, finished, waiting or failed, errors, finished commands and program messages.",
+      "The sidebar shows each project as a card, the task you are on as a raised card, and Active and Not active labels. Press, hold and move a project or task to reorder it.",
+      "Fixed: the Windows installer stopping because it could not close Tessera, a black band at the top in macOS full screen, and the scrollback restore errors at start-up.",
+    ],
+  },
+  {
+    version: "0.1.13",
+    date: "2026-11-14",
+    highlights: [
+      "A new baby-blue look: the whole app, not just the buttons, is tinted with your accent colour, in light and in dark. Pick another accent in Settings, Appearance and every surface follows.",
+      "Soft motion: buttons glow and press, dialogs and Settings pages rise in, tabs and marks slide in, and everything respects Reduce motion.",
+      "Selected tasks, the title bar, status bar, sidebar, cards and Settings headings use baby blue and its shades, and text stays readable (checked in both themes).",
+    ],
+  },
+  {
+    version: "0.1.12",
+    date: "2026-11-14",
+    highlights: [
+      "Baby blue is the primary colour everywhere, including the app icon, and you can change it in Settings, Appearance: seven presets or any colour you pick. Text and focus rings stay readable in every choice.",
+      "Reopening Tessera continues your last Claude Code, Codex or OpenCode conversation in the same folder, even when no conversation id was captured. If it cannot, you get a plain shell and a short note.",
+      "macOS permissions (microphone, camera, folders) now also survive updates for the session daemon that runs your terminals. Updating to 0.1.12 may ask one last time.",
+      "The sidebar filter icon sits right next to Add project, and form fields no longer leave blank gaps.",
+    ],
+  },
+  {
+    version: "0.1.11",
+    date: "2026-11-14",
+    highlights: [
+      "Reopening Tessera after a long time continues your agent conversations in the same folders instead of showing an error; when a conversation cannot continue you get a plain shell and a short note.",
+      "macOS keeps the permissions you granted (microphone, camera, folders) across updates. The update to 0.1.11 asks one last time.",
+      "The sidebar filter sits on the same row as Add project, and the sidebar, Settings and the rest of the app follow one spacing scale.",
+      "Settings pages share the Updates look. Appearance has an app theme (match my computer, light or dark) next to the terminal theme, and a large Change terminal appearance button.",
+    ],
+  },
+  {
+    version: "0.1.10",
+    date: "2026-11-13",
+    highlights: [
+      "Windows agent start, clone errors, empty repos, pasting and the Updates tab.",
+      "Offer git init for a folder that does not exist yet.",
+    ],
+  },
+  {
+    version: "0.1.9",
+    date: "2026-11-13",
+    highlights: [
+      "Choose the new branch's name, a default editor, the Tessera logo in the title bar; fix: task terminals start in the task's checkout, the cursor stays solid while output arrives or you scroll.",
+      "A task in the project folder shows its branch name with the branch icon instead of only Main checkout.",
+      "The sidebar puts active projects and tasks first, and tasks and projects can be reordered by dragging or with the keyboard.",
+      "The sidebar filter is one icon with a name search and a choice of all, active, not active or archived tasks.",
+    ],
+  },
+  {
+    version: "0.1.8",
+    date: "2026-11-13",
+    highlights: [
+      "A failed task creation leaves no task behind, pasting an image reaches the agent, macOS asks for microphone, camera and folder access, and the editor list shows every editor installed (Antigravity included).",
+    ],
+  },
+  {
+    version: "0.1.7",
+    date: "2026-11-13",
+    highlights: [
+      "Top bar opens the folder in an editor you choose and shows changed files and a file browser; split and broadcast buttons move to the bottom bar and notifications to the sidebar.",
+      "An agent shows Working only while it is working; a bigger, resizable Settings; Settings, Feedback, About and Shortcuts with labels in the sidebar.",
+      "A worktrees manager (branch, task, remote status; open, work on, move, unlink, delete, forget) and an agent drop-down in New task.",
+      "Working on an existing branch ignores worktrees whose folder is gone.",
+    ],
+  },
+  {
+    version: "0.1.6",
+    date: "2026-11-13",
+    highlights: [
+      "Top bar opens the folder in an editor you choose and shows changed files and a file browser; split and broadcast buttons move to the bottom bar and notifications to the sidebar.",
+      "An agent shows Working only while it is working; a bigger, resizable Settings; Settings, Feedback, About and Shortcuts with labels in the sidebar.",
+      "A worktrees manager (branch, task, remote status; open, work on, move, unlink, delete, forget) and an agent drop-down in New task.",
+      "Working on an existing branch ignores worktrees whose folder is gone.",
+    ],
+  },
+  {
+    version: "0.1.5",
+    date: "2026-11-13",
+    highlights: [
+      "Each project works on branches in its folder or in worktrees, with a menu to view, add as task or delete existing worktrees and to list branches; removing a project with agent sessions no longer fails.",
+      "What's new shows only the newest version, and a terminal in a deleted folder starts in the nearest folder that exists.",
+      "No console windows flash on Windows, the installer stops a running session daemon, and sessions end when you quit unless you keep them running in Settings.",
+    ],
+  },
+  {
+    version: "0.1.4",
+    date: "2026-11-12",
+    highlights: [
+      "Solid black, neutral look in dark mode and plain white in light mode: no more purple wash or gradients.",
+      "Agents open in their own tab instead of splitting the task's terminal.",
+      "Projects are your folders: Tessera creates a worktree only when you create a task, and warns you about worktrees that already exist (it never opens or changes them).",
+      "Choosing a branch that is already checked out explains that the task works in that folder.",
+      "After closing and reopening the app, a session that kept running no longer prints mouse movements as numbers.",
+    ],
+  },
+  {
+    version: "0.1.3",
+    date: "2026-11-12",
+    highlights: [
+      "A task can work on a branch that is already checked out in another folder: it uses that folder instead of failing.",
+      "Installing the command-line tool replaces a link left by a deleted copy of the app instead of refusing.",
+    ],
+  },
+  {
+    version: "0.1.2",
+    date: "2026-11-12",
+    highlights: [
+      "A new look, Nebula for dark and Daybreak for light, with gradient buttons and tinted panels.",
+      "Settings are picked from lists, switches and chips instead of typed, so a wrong value can no longer break the app.",
+      "A new task can work on a branch that already exists, and the base branch is a list of the repository's branches.",
+      "Agents you installed from another terminal, a version manager or an installer are found without installing them again.",
+      "Agent logos in the Agents page, task rows and pane headers.",
+      "Send feedback from the app: describe a problem or an idea and attach screenshots.",
+      "Fixes: onboarding and What's new no longer overlap, links open your browser, the sidebar shows folder and remote icons, and the broadcast buttons are readable.",
+    ],
+  },
+  {
+    version: "0.1.1",
+    date: "2026-11-12",
+    highlights: [
+      "Connect with GitHub now opens your browser by itself, and the Open github.com button works.",
+      "A database left by an older development build is repaired on start instead of failing to start an agent.",
+      "Icons in the command palette and in the Settings page list.",
+    ],
+  },
+  {
+    version: "0.1.0",
+    date: "2026-11-12",
+    highlights: [
+      "Terminals with panes, tabs, blocks and restore after restart, on macOS and Windows.",
+      "Agents side by side: Claude Code, Codex, Gemini CLI, OpenCode and your own, each in its own task and worktree.",
+      "Review panel with comments to the agent, staging, pull requests, CI and merge.",
+      "Best-of-N groups with a compare view, a board view, usage and cost, and handoff to another agent.",
+      "Issues from GitHub and Linear become tasks; automations start agents on a schedule or a label.",
+      "Remote projects over SSH, a local API and CLI, an MCP server, and an MCP and skills manager.",
+      "Optional encrypted sync, first-run setup with importers, and signed updates on a stable or beta channel.",
+    ],
+  },
+];
+
+export function notesFor(version: string): ReleaseNotes | undefined {
+  return RELEASES.find((release) => release.version === version);
+}
+
+export function newerThan(a: string, b: string): boolean {
+  const parse = (v: string) => v.split(/[.+-]/).map((part) => Number.parseInt(part, 10) || 0);
+  const [x, y] = [parse(a), parse(b)];
+  for (let i = 0; i < Math.max(x.length, y.length); i += 1) {
+    const diff = (x[i] ?? 0) - (y[i] ?? 0);
+    if (diff !== 0) return diff > 0;
+  }
+  return false;
+}
+
+/** The releases after `since`, up to and including `upTo`, newest first. */
+export function releasesBetween(since: string, upTo: string, releases: ReleaseNotes[] = RELEASES): ReleaseNotes[] {
+  return releases.filter((release) => newerThan(release.version, since) && !newerThan(release.version, upTo));
+}
+
+const SECTION = /^Tessera (\S+) \((\d{4}-\d{2}-\d{2})\)$/;
+
+/**
+ * Reads update-manifest notes written by scripts/update-notes.mjs back into releases, newest first. Notes in any other
+ * shape (older manifests: "Tessera 0.1.17") give null, and the caller shows them as plain text.
+ */
+export function parseUpdateNotes(notes: string): ReleaseNotes[] | null {
+  const releases: ReleaseNotes[] = [];
+  for (const raw of notes.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (line === "") continue;
+    const header = SECTION.exec(line);
+    if (header) {
+      releases.push({ version: header[1] ?? "", date: header[2] ?? "", highlights: [] });
+      continue;
+    }
+    const current = releases.at(-1);
+    if (!current || !line.startsWith("- ")) return null;
+    current.highlights.push(line.slice(2));
+  }
+  return releases.length > 0 ? releases : null;
+}

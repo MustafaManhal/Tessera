@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "autohand"
+name = "Autohand Code"
+binaries = ["autohand"]
+version-cmd = ["autohand", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = ["--unrestricted"]
+hooks = "none"
+install-url = "https://autohand.ai/code/"
+docs-url = "https://autohand.ai/code/"
+icon = "bot"
+install-command = "npm install -g autohand-cli"
+[usage]
+source = "none"

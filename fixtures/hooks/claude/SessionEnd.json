@@ -1,0 +1,8 @@
+{
+  "session_id": "fixture-session",
+  "cwd": "/fixture/project",
+  "hook_event_name": "SessionEnd",
+  "transcript_path": "/fixture/transcript.jsonl",
+  "permission_mode": "default",
+  "reason": "prompt_input_exit"
+}

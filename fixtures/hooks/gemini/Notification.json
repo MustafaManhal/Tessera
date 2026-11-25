@@ -1,0 +1,12 @@
+{
+  "session_id": "fixture-session",
+  "cwd": "/fixture/project",
+  "hook_event_name": "Notification",
+  "transcript_path": "/fixture/transcript.json",
+  "timestamp": "2026-11-11T00:00:00Z",
+  "notification_type": "ToolPermission",
+  "message": "Approval required",
+  "details": {
+    "tool_name": "run_shell_command"
+  }
+}
