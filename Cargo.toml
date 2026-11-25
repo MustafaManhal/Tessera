@@ -1,0 +1,48 @@
+[workspace]
+resolver = "3"
+members = ["apps/desktop/src-tauri", "crates/*"]
+
+[workspace.package]
+version = "0.1.23"
+edition = "2024"
+license = "MIT"
+rust-version = "1.90"
+
+# Clippy lints for the workspace. `all = "warn"` keeps the warnings visible, and
+# the `rust:clippy` check command adds `-- -D warnings` so any warning fails the gate.
+[workspace.lints]
+clippy = { all = "warn" }
+
+# Size and speed settings for release builds: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
+
+# Dependencies are built for size (they are not the hot path); our own crates stay at opt-level 3. This keeps the
+# macOS universal installer under the 25 MB limit (NFR-05): it carries both architectures.
+[profile.release.package."*"]
+opt-level = "s"
+
+# Our library crates off the hot path (settings, git, forge, sync, API and agent bookkeeping) are
+# built for size too; the terminal path (tessera-pty, tessera-shell, tesserad) stays at opt-level 3. Without this the
+# universal installer crossed 25 MB in 0.1.23.
+[profile.release.package.tessera-agents]
+opt-level = "s"
+
+[profile.release.package.tessera-api]
+opt-level = "s"
+
+[profile.release.package.tessera-forge]
+opt-level = "s"
+
+[profile.release.package.tessera-git]
+opt-level = "s"
+
+[profile.release.package.tessera-store]
+opt-level = "s"
+
+[profile.release.package.tessera-sync]
+opt-level = "s"

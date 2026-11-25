@@ -1,0 +1,16 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "oh-my-pi"
+name = "Oh My Pi"
+binaries = ["omp"]
+version-cmd = ["omp", "--version"]
+prompt-mode = "type"
+resume = ["omp", "--session", "{external_session_id}"]
+yolo-flags = []
+hooks = "none"
+install-url = "https://omp.sh"
+docs-url = "https://omp.sh"
+icon = "bot"
+install-command = "curl -fsSL https://omp.sh/install | sh"
+install-command-windows = "irm https://omp.sh/install.ps1 | iex"
+[usage]
+source = "none"

@@ -1,0 +1,66 @@
+# Packaging check (M12.3): the same installers as the Release workflow, without secrets and without a release. Proves on
+# Windows (x64 and arm64) and macOS (universal) that the installers build with both helper programs inside and stay
+# within 25 MB (NFR-05). Run by hand: Actions, Package check, Run workflow.
+name: Package check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  package:
+    name: package (${{ matrix.name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS universal
+            os: macos-latest
+            target: universal-apple-darwin
+            bundles: app,dmg
+            rust_targets: aarch64-apple-darwin x86_64-apple-darwin
+          - name: Windows x64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bundles: nsis,msi
+            rust_targets: x86_64-pc-windows-msvc
+          - name: Windows arm64
+            os: windows-latest
+            target: aarch64-pc-windows-msvc
+            bundles: nsis
+            rust_targets: aarch64-pc-windows-msvc
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Rust targets
+        shell: bash
+        run: |
+          for t in ${{ matrix.rust_targets }}; do rustup target add "$t"; done
+      - name: Build installers
+        shell: bash
+        env:
+          APPLE_SIGNING_IDENTITY: "-"
+        run: node scripts/package.mjs --target ${{ matrix.target }} -- --bundles ${{ matrix.bundles }}
+      - name: Installer size (at most 25 MB)
+        shell: bash
+        run: node scripts/size-check.mjs target/${{ matrix.target }}/release/bundle
+      - name: Both helper programs are inside
+        shell: bash
+        run: |
+          find target/${{ matrix.target }}/release/bundle -iname 'tesserad*' -o -iname 'tessera' -o -iname 'tessera.exe' | head -20
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installers-${{ matrix.target }}
+          path: |
+            target/${{ matrix.target }}/release/bundle/**/*.dmg
+            target/${{ matrix.target }}/release/bundle/**/*.msi
+            target/${{ matrix.target }}/release/bundle/**/*-setup.exe
+          if-no-files-found: error
+          retention-days: 7

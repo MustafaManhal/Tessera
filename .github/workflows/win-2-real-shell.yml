@@ -1,0 +1,40 @@
+name: "Windows 2: real PowerShell"
+
+# Manual, one workflow per Windows check. Start them one at a time (Actions, pick the workflow, Run workflow).
+# Proves on Windows: M2.1 (PowerShell shell integration marks), M2.2 and M2.3 (command blocks, cwd follow, alerts with a real shell).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-shell:
+    name: Real PowerShell through the PTY bridge
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Build the PTY bridge
+        run: cargo build --locked -p tessera-pty --example pty_bridge
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+      - name: Verify the real PowerShell terminal
+        env:
+          BRIDGE: real
+          TESSERA_DEV_PORT: "1422"
+          TESSERA_BRIDGE_BINARY: target/debug/examples/pty_bridge.exe
+        run: pnpm test:real-shell
+      - name: Upload real-shell report and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-real-shell-windows-${{ github.run_id }}
+          path: |
+            playwright-report/**
+            apps/desktop/playwright-report/**
+            test-results/**
+            apps/desktop/test-results/**
+          if-no-files-found: warn
+          retention-days: 14

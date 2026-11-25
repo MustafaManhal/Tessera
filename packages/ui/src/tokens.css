@@ -1,0 +1,316 @@
+/*
+ * Design tokens (03-UI-UX §2) as CSS variables. Plain CSS, no Tailwind: `theme.css` maps these into Tailwind
+ * utilities, and any stylesheet can use them directly.
+ *
+ * Themes: light on `:root`, dark on `[data-theme="dark"]`, and dark for the system setting through
+ * `prefers-color-scheme` unless `data-theme="light"` forces light. `[data-theme]` works on any element, so a subtree
+ * can use the other theme.
+ *
+ * Values follow §2 except where WCAG 2.2 AA needed a change; `.ai/research/tokens-contrast.md` lists every change
+ * with the ratio before and after, and `tests/contrast.test.ts` checks every pair. Names here must not reuse the
+ * Tailwind theme names in `theme.css` (that would make a variable refer to itself).
+ *
+ * Status is never colour alone (§1.2): each status colour pairs with an icon and a label, kept in `status.ts`.
+ *   --st-working  spinning arc (LoaderCircle)          "Working"
+ *   --st-needs    raised hand (Hand)                   "Needs you"
+ *   --st-done     check (Check)                        "Done"
+ *   --st-error    triangle (TriangleExclamationPoint)  "Error"
+ *   --st-off      hollow circle (Circle)               "Not running"
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Tessera Light. Every theme sets these same tokens on <html> (packages/ui/src/colorThemes.ts, ThemeHost); the values
+     here are Tessera Light and Tessera Dark, so the first paint matches the default themes. tests/contrast.test.ts
+     checks they equal the theme definitions. Solid colours only: nothing here mixes in the accent. */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #e9ecf0;
+  --surface-3: #dde2e8;
+  --sidebar-bg: #f5f6f8;
+  --titlebar-bg: #eef0f3;
+  --statusbar-bg: #f5f6f8;
+  --statusbar-fg: #5b6470;
+  --statusbar-hover: #e3e4e8;
+  --statusbar-active: #f8f8fa;
+  --border: #dfe3e8;
+  --border-strong: #83868b;
+  --text: #1b1f24;
+  --text-muted: #5b6470;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --accent-ink: #2159d4;
+  --accent-shade: #000000;
+  --danger-fg: #ffffff;
+  --danger-shade: #000000;
+  --overlay: rgb(0 0 0 / 0.32);
+  --st-working: #0b72d1;
+  --st-needs: #bc4c00;
+  --st-done: #1a7f37;
+  --st-error: #d1242f;
+  --st-off: #70767f;
+  --tab-red: #d1242f;
+  --tab-orange: #bc4c00;
+  --tab-yellow: #9a6700;
+  --tab-green: #1a7f37;
+  --tab-blue: #0b72d1;
+  --tab-purple: #8250df;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Tessera Dark */
+  --bg: #16181c;
+  --surface: #1c1f24;
+  --surface-2: #23272d;
+  --surface-3: #2b3038;
+  --sidebar-bg: #121417;
+  --titlebar-bg: #121417;
+  --statusbar-bg: #121417;
+  --statusbar-fg: #9aa2ad;
+  --statusbar-hover: #222529;
+  --statusbar-active: #2d3035;
+  --border: #262a30;
+  --border-strong: #6d7075;
+  --text: #e4e7eb;
+  --text-muted: #9aa2ad;
+  --accent: #2f6feb;
+  --accent-fg: #ffffff;
+  --accent-ink: #6897f1;
+  --accent-shade: #000000;
+  --danger-fg: #0a0a0a;
+  --danger-shade: #ffffff;
+  --overlay: rgb(0 0 0 / 0.6);
+  --st-working: #5c9cf5;
+  --st-needs: #f5b83d;
+  --st-done: #3ecf8e;
+  --st-error: #f2555a;
+  --st-off: #808690;
+  --tab-red: #f2555a;
+  --tab-orange: #f0883e;
+  --tab-yellow: #f5b83d;
+  --tab-green: #3ecf8e;
+  --tab-blue: #5c9cf5;
+  --tab-purple: #b392f0;
+}
+
+/* The system setting picks dark unless the app forces light. Keep this block identical to the one above
+   (tests/contrast.test.ts checks it). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #16181c;
+    --surface: #1c1f24;
+    --surface-2: #23272d;
+    --surface-3: #2b3038;
+    --sidebar-bg: #121417;
+    --titlebar-bg: #121417;
+    --statusbar-bg: #121417;
+    --statusbar-fg: #9aa2ad;
+    --statusbar-hover: #222529;
+    --statusbar-active: #2d3035;
+    --border: #262a30;
+    --border-strong: #6d7075;
+    --text: #e4e7eb;
+    --text-muted: #9aa2ad;
+    --accent: #2f6feb;
+    --accent-fg: #ffffff;
+    --accent-ink: #6897f1;
+    --accent-shade: #000000;
+    --danger-fg: #0a0a0a;
+    --danger-shade: #ffffff;
+    --overlay: rgb(0 0 0 / 0.6);
+    --st-working: #5c9cf5;
+    --st-needs: #f5b83d;
+    --st-done: #3ecf8e;
+    --st-error: #f2555a;
+    --st-off: #808690;
+    --tab-red: #f2555a;
+    --tab-orange: #f0883e;
+    --tab-yellow: #f5b83d;
+    --tab-green: #3ecf8e;
+    --tab-blue: #5c9cf5;
+    --tab-purple: #b392f0;
+  }
+}
+
+/* Derived colours. A custom property inherits its resolved value, so these are declared again on every
+   `[data-theme]` element: a subtree in the other theme then derives from its own palette. */
+:root,
+[data-theme] {
+  /* Semantic aliases (§2: same as error / done / needs) */
+  --danger: var(--st-error);
+  --success: var(--st-done);
+  --warning: var(--st-needs);
+
+  /* Pressed and hover fills mix toward the shade (black under a white label, white under a dark one), so contrast with
+     the label only grows. */
+  --accent-soft: color-mix(in srgb, var(--accent) 22%, var(--surface)); /* selected nav item, chip fill */
+  --surface-press: color-mix(in srgb, var(--surface-3) 88%, var(--text)); /* a pressed secondary button */
+  --accent-hover: color-mix(in srgb, var(--accent) 88%, var(--accent-shade));
+  --accent-press: color-mix(in srgb, var(--accent) 76%, var(--accent-shade));
+  --danger-hover: color-mix(in srgb, var(--danger) 88%, var(--danger-shade));
+  --danger-press: color-mix(in srgb, var(--danger) 76%, var(--danger-shade));
+
+  /* Status tints: the background of a status pill. Opaque, so contrast is the same on any surface. */
+  --st-working-tint: color-mix(in srgb, var(--st-working) 12%, var(--surface));
+  --st-needs-tint: color-mix(in srgb, var(--st-needs) 12%, var(--surface));
+  --st-done-tint: color-mix(in srgb, var(--st-done) 12%, var(--surface));
+  --st-error-tint: color-mix(in srgb, var(--st-error) 12%, var(--surface));
+  --st-off-tint: color-mix(in srgb, var(--st-off) 12%, var(--surface));
+
+  /* Focus ring: 2 px --accent + 1 px offset. §2 says 60 %; 80 % is the lowest step that keeps 3:1 on every
+     surface in both themes. */
+  --focus-ring-color: color-mix(in srgb, var(--accent-ink) 80%, transparent);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 1px;
+  --focus-ring: var(--focus-ring-width) solid var(--focus-ring-color);
+
+  /* Attention ring around a pane waiting for input: 2 px inset in --st-needs. */
+  --attention-ring: inset 0 0 0 2px var(--st-needs);
+
+  /* Task names in the sidebar that are not in front: the accent toward the muted text, an opaque colour. */
+  --task-fg: color-mix(in srgb, var(--accent-ink) 60%, var(--text-muted));
+
+  /* The terminal theme sets this (M1); chrome next to the terminal mixes with it. */
+  --term-bg: var(--bg);
+}
+
+/* Theme-independent tokens. */
+:root {
+  --window-opacity: 1;
+
+  /* Unfocused panes are dimmed by this much (0–1; 03-UI-UX §4: 0 by default, 0.15 optional). The setting
+     `pane-dim-unfocused` (stub until settings land) overrides it on <html>. */
+  --pane-dim: 0;
+
+  /* Typography (UI). One stack for both platforms: each skips the other's fonts. Sizes in rem so a UI zoom
+     can scale the chrome through the root font size without touching the terminal. */
+  --font-family-ui:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI",
+    system-ui, sans-serif;
+  --font-size-xs: 0.6875rem; /* 11px */
+  --font-size-sm: 0.75rem; /* 12px */
+  --font-size-base: 0.8125rem; /* 13px */
+  --font-size-lg: 0.9375rem; /* 15px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --line-height-ui: 1.4;
+
+  /* Typography (terminal). JetBrains Mono and Symbols Nerd Font Mono are bundled later (M1); the system
+     monospace fonts stand in until then. */
+  --font-family-mono:
+    "JetBrains Mono", "Symbols Nerd Font Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Cascadia Mono", monospace;
+  --term-font-size: 13px;
+  --line-height-term: 1.2;
+
+  /* Spacing scale: 2, 4, 6, 8, 12, 16, 20, 24, 32 px. Tailwind steps 0.5, 1, 1.5, 2, 3, 4, 5, 6, 8 of
+     --space-unit give the same values (p-2 = 8px). */
+  --space-unit: 0.25rem; /* 4px */
+  --space-2: 0.125rem;
+  --space-4: 0.25rem;
+  --space-6: 0.375rem;
+  --space-8: 0.5rem;
+  --space-12: 0.75rem;
+  --space-16: 1rem;
+  --space-20: 1.25rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+
+  /* Radius */
+  --radius-badge: 4px;
+  --radius-control: 8px; /* inputs, buttons */
+  --radius-card: 12px; /* cards, panels */
+  --radius-dialog: 16px; /* dialogs, palette */
+
+  /* Borders and shadows. No shadows in the sidebar. */
+  --border-width: 1px;
+  --elevation-dialog: 0 12px 32px rgb(0 0 0 / 0.5);
+  --elevation-popover: 0 4px 16px rgb(0 0 0 / 0.16); /* added: tooltips, menus, toasts */
+
+  /* Icons: lucide, 16 px in rows, 14 px in tabs, stroke 1.75 */
+  --icon-size-row: 16px;
+  --icon-size-tab: 14px;
+  --icon-stroke: 1.75;
+
+  /* Motion. Fades stay with reduced motion; everything that moves drops to 0. */
+  --motion-fast: 120ms; /* hover, press */
+  --motion-base: 180ms; /* panel open and close, ring pulse */
+  --motion-slow: 240ms; /* quick terminal slide */
+  --motion-fade-fast: 120ms; /* colour and opacity on hover */
+  --motion-fade: 180ms; /* opacity in and out */
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Windows sizes the terminal font in points (§2: 13 px macOS / 12 pt Windows). The app sets data-platform. */
+:root[data-platform="windows"] {
+  --term-font-size: 12pt;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+    --motion-slow: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* The in-app "Reduce motion" switch (Settings, Appearance) does the same as the system setting. */
+:root[data-reduce-motion="true"] {
+  --motion-fast: 0ms;
+  --motion-base: 0ms;
+  --motion-slow: 0ms;
+}
+
+:root[data-reduce-motion="true"] *,
+:root[data-reduce-motion="true"] *::before,
+:root[data-reduce-motion="true"] *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --text-muted: var(--text);
+    --border: var(--border-strong);
+    --border-strong: var(--text);
+    --focus-ring-color: var(--accent-ink);
+    --focus-ring-width: 3px;
+  }
+}
+
+@media (forced-colors: active) {
+  :root {
+    --bg: Canvas;
+    --surface: Canvas;
+    --surface-2: ButtonFace;
+    --surface-3: Highlight;
+    --border: CanvasText;
+    --border-strong: CanvasText;
+    --text: CanvasText;
+    --text-muted: CanvasText;
+    --accent: Highlight;
+    --accent-fg: HighlightText;
+    --accent-ink: Highlight;
+    --danger: Mark;
+    --danger-fg: MarkText;
+    --focus-ring-color: Highlight;
+  }
+}

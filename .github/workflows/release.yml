@@ -1,0 +1,152 @@
+# Release (M12.3): builds the installers and the signed update bundles for macOS (universal) and Windows (x64, arm64),
+# checks each installer is at most 25 MB (NFR-05), and creates a DRAFT GitHub release with the update manifest.
+# Run it by hand (Actions, Release, Run workflow). It never publishes: open the draft, read it, press Publish.
+#
+# Signing, as decided (D-13, D-14): the macOS app is ad hoc signed, not notarized; Windows installers are unsigned until
+# SignPath approves the project (then add its action after the Windows build; see docs/releasing.md). The UPDATE bundles
+# are always signed with the updater key (secrets TAURI_SIGNING_PRIVATE_KEY and TAURI_SIGNING_PRIVATE_KEY_PASSWORD).
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag to create, for example v0.1.0 (stable) or v0.2.0-beta.1 (beta)"
+        required: true
+      channel:
+        description: "stable: the draft becomes the latest release. beta: a rolling pre-release tagged beta."
+        type: choice
+        options: [stable, beta]
+        default: stable
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: build (${{ matrix.name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS universal
+            # Intel runners: the Apple-silicon pool (macos-latest) often has no free machine and the job waits until it
+            # is cancelled. The universal build compiles both architectures on either kind of machine.
+            os: macos-15-intel
+            target: universal-apple-darwin
+            bundles: app,dmg
+            rust_targets: aarch64-apple-darwin x86_64-apple-darwin
+          - name: Windows x64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bundles: nsis,msi
+            rust_targets: x86_64-pc-windows-msvc
+          - name: Windows arm64
+            os: windows-latest
+            target: aarch64-pc-windows-msvc
+            bundles: nsis
+            rust_targets: aarch64-pc-windows-msvc
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Xcode 26 (macOS)
+        # The app must be linked against the macOS 26 SDK. Linked against an older one (the Intel image defaults to
+        # Xcode 16), macOS runs it in compatibility mode and full screen shows the old title-bar band again (0.1.21).
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | tail -1)
+          if [ -z "$xcode" ]; then
+            echo "::error::No Xcode 26 on this runner"
+            ls -d /Applications/Xcode*.app
+            exit 1
+          fi
+          sudo xcode-select -s "$xcode/Contents/Developer"
+          echo "Using $xcode, macOS SDK $(xcrun --sdk macosx --show-sdk-version)"
+      - name: Rust targets
+        shell: bash
+        run: |
+          for t in ${{ matrix.rust_targets }}; do rustup target add "$t"; done
+      - name: Build installers and update bundles
+        shell: bash
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # macOS: ad hoc signature (no Apple Developer account, D-13).
+          APPLE_SIGNING_IDENTITY: "-"
+        run: node scripts/package.mjs --target ${{ matrix.target }} --updater -- --bundles ${{ matrix.bundles }}
+      - name: macOS SDK check
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          app=$(find target -type d -path '*/bundle/macos/*.app' -prune | head -1)
+          if [ -z "$app" ]; then
+            echo "::warning::No .app bundle found under target/ to check"
+            exit 0
+          fi
+          sdk=$(otool -l "$app/Contents/MacOS/tessera-desktop" | awk '$1 == "sdk" {print $2}' | head -1 || true)
+          echo "$app is linked against macOS SDK ${sdk:-unknown}"
+          if [ -z "$sdk" ]; then
+            # Not read (0.1.22's run printed nothing here): show what otool sees, but do not block the release on it.
+            echo "::warning::Could not read the macOS SDK of $app"
+            otool -l "$app/Contents/MacOS/tessera-desktop" | grep -A4 LC_BUILD_VERSION | head -12 || true
+          elif [ "${sdk%%.*}" -lt 26 ]; then
+            echo "::error::Linked against macOS SDK $sdk; full screen needs SDK 26 or later"
+            exit 1
+          fi
+      - name: Installer size (at most 25 MB)
+        shell: bash
+        run: node scripts/size-check.mjs target/${{ matrix.target }}/release/bundle
+      - name: Collect
+        shell: bash
+        run: |
+          mkdir -p out
+          find target/${{ matrix.target }}/release/bundle -type f \( -name '*.dmg' -o -name '*.msi' -o -name '*.exe' -o -name '*.app.tar.gz' -o -name '*.sig' \) -exec cp {} out/ \;
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundle-${{ matrix.target }}
+          path: out/*
+          if-no-files-found: error
+
+  draft:
+    name: draft release
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Update manifest
+        shell: bash
+        run: |
+          VERSION="${{ inputs.version }}"
+          TAG="$VERSION"
+          if [ "${{ inputs.channel }}" = "beta" ]; then TAG="beta"; fi
+          BASE="https://github.com/${{ github.repository }}/releases/download/${TAG}"
+          # The notes cover only this release: the Updates page shows what the new version brings.
+          node scripts/update-notes.mjs --version "${VERSION#v}" --out notes.txt
+          node scripts/release-manifest.mjs --version "${VERSION#v}" --base-url "$BASE" --notes notes.txt --out dist/latest.json dist
+          cat dist/latest.json
+      - name: Draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          VERSION="${{ inputs.version }}"
+          if [ "${{ inputs.channel }}" = "beta" ]; then
+            gh release delete beta --yes --cleanup-tag || true
+            gh release create beta dist/* --draft --prerelease --title "Tessera beta ($VERSION)" --notes "Beta build $VERSION"
+          else
+            gh release create "$VERSION" dist/* --draft --title "Tessera ${VERSION#v}" --notes-file notes.txt
+          fi

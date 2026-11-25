@@ -1,0 +1,49 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/target",
+      "!**/about/licenses.json",
+      "!**/.ai",
+      "!**/.agent-lead",
+      "!**/test-results",
+      "!**/playwright-report",
+      "!apps/desktop/src-tauri/gen",
+      "!packages/ipc/src/bindings.ts",
+      "!packages/ipc/schema/config.schema.json",
+      "!**/*.md",
+      "!website"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "assist": {
+    "enabled": false
+  }
+}

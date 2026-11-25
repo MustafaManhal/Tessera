@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "codebuff"
+name = "Codebuff"
+binaries = ["codebuff"]
+version-cmd = ["codebuff", "--version"]
+prompt-mode = "type"
+resume = []
+yolo-flags = []
+hooks = "none"
+install-url = "https://www.codebuff.com/docs/help/quick-start"
+docs-url = "https://www.codebuff.com/docs/help/quick-start"
+icon = "bot"
+install-command = "npm install -g codebuff"
+[usage]
+source = "none"

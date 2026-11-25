@@ -1,0 +1,15 @@
+# Install commands follow the vendor install pages and installers; an empty Windows command means the install page is the way.
+id = "kilocode"
+name = "Kilocode"
+binaries = ["kilo"]
+version-cmd = ["kilo", "--version"]
+prompt-mode = "flag:--prompt"
+resume = []
+yolo-flags = ["--auto"]
+hooks = "none"
+install-url = "https://kilo.ai/docs/cli"
+docs-url = "https://kilo.ai/docs/cli"
+icon = "bot"
+install-command = "npm install -g @kilocode/cli"
+[usage]
+source = "none"
